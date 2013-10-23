@@ -23,8 +23,8 @@ Failure to provide a valid API key will result in a status 401 (unauthorized) wi
 ```
 
 
-User-Agent string
------------------
+Identify your appliaction in the User-Agent string
+--------------------------------------------------
 
 Include the name of your application and a contact email in your User-Agent string like this:
 
@@ -40,7 +40,7 @@ Failure to do so will result in a status 400 (bad request) with a JSON body of:
 Example request
 ---------------
 
-Here's an example request:
+Here's what a complete request looks like:
 
 ```shell
 curl -u "api_key:" -H 'User-Agent: Some app (test@example.test)' https://zenbilling.com/api/v1/lists.json
@@ -53,6 +53,12 @@ curl -u "api_key:" -H 'Content-Type: application/json' -H 'User-Agent: Some app 
   -d '{ "first_name": "New Subscriber", "email": "someemail@example.test" }' \
   https://zenbilling.com/api/v1/lists/1/subscribe.json
 ```
+
+
+Questions? Improvements?
+------------------------
+
+Get in touch with zenbilling's creator, Calvin Conaway at calvin@conaway.com.
 
 
 
@@ -104,8 +110,8 @@ Subscribe to list
 ```json
 {
   "first_name":              "Calvin", 
-  "email":                   'calvin@conaway.com', 
-  "ip_address":              '192.168.1.2',
+  "email":                   "calvin@conaway.com", 
+  "ip_address":              "192.168.1.2",
   "referrer":                "http://google.com/search?q=foo",
   "ref":                     123,
   "track":                   "api",
