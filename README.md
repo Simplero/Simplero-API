@@ -4,12 +4,10 @@ Simplero API Documentation
 The API is REST, using JSON for serialization, with no root element.
 
 You'll notice right away that this API is woefully incomplete. If you need anything, please ask.
-I'm Calvin Conaway (calvin@conaway.com), the founder, CEO, and creator of zenbilling, and I'm always open
+I'm Calvin Correli (calvin@simplero.com), the founder, CEO, and creator of Simplero, and I'm always open
 to your input, and we're flexible about adding additional API calls.
 
-The hostname to use for API calls is simplero.com, not zenbilling.com.
-
-zenbilling will be rebranding as Simplero shortly, and we might as well be forward-looking with the API.
+We also have one webhook endpoint available. See the bottom of this file.
 
 
 Making a request
@@ -138,4 +136,26 @@ This is only relevant when using Simplero's conversion tracking featuer.
 `referrer` should be the last external URL visited before the subscribe form.
 
 `track` is any keyword that you wish to associate with this opt-in, so you can track where people came from.
+
+
+
+Webhook endpoint
+================
+
+If you're using some other system for selling, and want to hook it up so you can automatically add people to your products in Simplero, which will give them access to the space, this is what you need.
+
+The URL is:
+
+* `POST https://simplero.com/webhook/products/1/purchase`
+
+Replace the number 1 with the ID of the product you want to add people to. You can find that in the admin URL.
+
+You must include the following POST parameters:
+
+* `api_key` - the API key found in your admin interface under Settings > API keys
+* `first_names` - first name
+* `last_name` - last name
+* `email` - email address
+
+We'll take it from there, hook people up with a Simplero ID, email them the auto-responders you've set up, and do anything else that needs to happen.
 
