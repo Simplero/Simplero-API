@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Simplero API by Simplero</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Simplero API</h1>
+        <p>API documentation for Simplero</p>
+
+        <p class="view"><a href="https://github.com/Simplero/Simplero-API">View the Project on GitHub <small>Simplero/Simplero-API</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/Simplero/Simplero-API/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/Simplero/Simplero-API/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/Simplero/Simplero-API">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="simplero-api-documentation" class="anchor" href="#simplero-api-documentation"><span class="octicon octicon-link"></span></a>Simplero API Documentation</h1>
+
+<p>The API is REST, using JSON for serialization, with no root element.</p>
+
+<p>You'll notice right away that this API is woefully incomplete. If you need anything, please ask.
+I'm Calvin Conaway (<a href="mailto:calvin@conaway.com">calvin@conaway.com</a>), the founder, CEO, and creator of zenbilling, and I'm always open
+to your input, and we're flexible about adding additional API calls.</p>
+
+<p>The hostname to use for API calls is simplero.com, not zenbilling.com.</p>
+
+<p>zenbilling will be rebranding as Simplero shortly, and we might as well be forward-looking with the API.</p>
+
+<h2>
+<a name="making-a-request" class="anchor" href="#making-a-request"><span class="octicon octicon-link"></span></a>Making a request</h2>
+
+<p>All API request URLs start with <code>https://simplero.com/api/v1/</code>. </p>
+
+<p>All requests have to be over HTTPS.</p>
+
+<h2>
+<a name="authentication" class="anchor" href="#authentication"><span class="octicon octicon-link"></span></a>Authentication</h2>
+
+<p>Requests are authenticated using HTTP Basic Auth, with the API key as the username, password left empty.</p>
+
+<p>Failure to provide a valid API key will result in a status 401 (unauthorized) with a JSON body of:</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span> <span class="nt">"error"</span><span class="p">:</span> <span class="s2">"Bad API key"</span> <span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="identify-your-appliaction-in-the-user-agent-string" class="anchor" href="#identify-your-appliaction-in-the-user-agent-string"><span class="octicon octicon-link"></span></a>Identify your appliaction in the User-Agent string</h2>
+
+<p>Include the name of your application and a contact email in your User-Agent string like this:</p>
+
+<ul>
+<li><code>Some app (email@example.test)</code></li>
+</ul><p>Failure to do so will result in a status 400 (bad request) with a JSON body of:</p>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span> <span class="nt">"error"</span><span class="p">:</span> <span class="s2">"Incorrect User-Agent"</span> <span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="example-request" class="anchor" href="#example-request"><span class="octicon octicon-link"></span></a>Example request</h2>
+
+<p>Here's what a complete request looks like:</p>
+
+<pre lang="shell"><code>curl -u "api_key:" -H 'User-Agent: Some app (test@example.test)' https://simplero.com/api/v1/lists.json
+</code></pre>
+
+<p>To add or update something, include the JSON data with a <code>Content-Type</code> header:</p>
+
+<pre lang="shell"><code>curl -u "api_key:" -H 'Content-Type: application/json' -H 'User-Agent: Some app (email@example.test)' \
+  -d '{ "first_name": "New Subscriber", "email": "someemail@example.test" }' \
+  https://simplero.com/api/v1/lists/1/subscribe.json
+</code></pre>
+
+<h1>
+<a name="lists" class="anchor" href="#lists"><span class="octicon octicon-link"></span></a>Lists</h1>
+
+<h2>
+<a name="get-lists" class="anchor" href="#get-lists"><span class="octicon octicon-link"></span></a>Get lists</h2>
+
+<ul>
+<li>
+<code>GET /lists.json</code> will return all the account's lists</li>
+</ul><div class="highlight highlight-json"><pre><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nt">"id"</span><span class="p">:</span><span class="mi">1942123930</span><span class="p">,</span>
+    <span class="nt">"name"</span><span class="p">:</span><span class="s2">"Marianne's Universe"</span><span class="p">,</span>
+    <span class="nt">"confirm_pending_url"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span>
+    <span class="nt">"created_at"</span><span class="p">:</span><span class="s2">"2013-10-23T16:45:14+02:00"</span><span class="p">,</span>
+    <span class="nt">"email_field_name"</span><span class="p">:</span><span class="s2">"89aet"</span><span class="p">,</span>
+    <span class="nt">"reply_to"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span>
+    <span class="nt">"require_confirmation"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"return_to"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span>
+    <span class="nt">"sender_email"</span><span class="p">:</span><span class="s2">"marianne@mariannesclub.com"</span><span class="p">,</span>
+    <span class="nt">"sender_name"</span><span class="p">:</span><span class="s2">"Marianne"</span><span class="p">,</span>
+    <span class="nt">"unsubscribed_url"</span><span class="p">:</span><span class="kc">null</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="nt">"id"</span><span class="p">:</span><span class="mi">7253003287</span><span class="p">,</span>
+    <span class="nt">"name"</span><span class="p">:</span><span class="s2">"Free tips"</span><span class="p">,</span>
+    <span class="nt">"confirm_pending_url"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span>
+    <span class="nt">"created_at"</span><span class="p">:</span><span class="s2">"2013-10-23T16:45:14+02:00"</span><span class="p">,</span>
+    <span class="nt">"email_field_name"</span><span class="p">:</span><span class="s2">"atn23nh2e"</span><span class="p">,</span>
+    <span class="nt">"reply_to"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span>
+    <span class="nt">"require_confirmation"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span>
+    <span class="nt">"return_to"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span>
+    <span class="nt">"sender_email"</span><span class="p">:</span><span class="s2">"marianne@mariannesclub.com"</span><span class="p">,</span>
+    <span class="nt">"sender_name"</span><span class="p">:</span><span class="s2">"Marianne"</span><span class="p">,</span>
+    <span class="nt">"unsubscribed_url"</span><span class="p">:</span><span class="kc">null</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+
+<h2>
+<a name="subscribe-to-list" class="anchor" href="#subscribe-to-list"><span class="octicon octicon-link"></span></a>Subscribe to list</h2>
+
+<ul>
+<li>
+<code>POST /lists/1/subscribe.json</code> will add a new subscriber to the list</li>
+</ul><div class="highlight highlight-json"><pre><span class="p">{</span>
+  <span class="nt">"first_name"</span><span class="p">:</span>              <span class="s2">"Calvin"</span><span class="p">,</span> 
+  <span class="nt">"last_name"</span><span class="p">:</span>               <span class="s2">"Conaway"</span><span class="p">,</span>
+  <span class="nt">"email"</span><span class="p">:</span>                   <span class="s2">"calvin@conaway.com"</span><span class="p">,</span> 
+  <span class="nt">"ip_address"</span><span class="p">:</span>              <span class="s2">"77.66.17.105"</span><span class="p">,</span>
+  <span class="nt">"referrer"</span><span class="p">:</span>                <span class="s2">"http://google.com/search?q=foo"</span><span class="p">,</span>
+  <span class="nt">"ref"</span><span class="p">:</span>                     <span class="mi">123</span><span class="p">,</span>
+  <span class="nt">"track"</span><span class="p">:</span>                   <span class="s2">"api"</span><span class="p">,</span>
+  <span class="nt">"first_activated_at"</span><span class="p">:</span>      <span class="s2">"2012-03-22T17:35:50-05:00"</span><span class="p">,</span>
+  <span class="nt">"auto_responder_start_at"</span><span class="p">:</span> <span class="s2">"2012-03-22T17:35:50-05:00"</span><span class="p">,</span>
+  <span class="nt">"landing_page_id"</span><span class="p">:</span>         <span class="mi">123</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Everything except <code>email</code> is optional.</p>
+
+<p><code>ip_address</code> should be the actual IP address that the actual customer used to subscribe to the list. 
+It should NOT be a private IP address, nor should it be faked or manipulated in any way.</p>
+
+<p><code>landing_page_id</code> is the landing page (signup form) within Simplero that this conversion should be counted for. 
+This is only relevant when using Simplero's conversion tracking featuer.</p>
+
+<p><code>ref</code> is the affiliate ref that this conversion should be attributed to.</p>
+
+<p><code>referrer</code> should be the last external URL visited before the subscribe form.</p>
+
+<p><code>track</code> is any keyword that you wish to associate with this opt-in, so you can track where people came from.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/Simplero">Simplero</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
