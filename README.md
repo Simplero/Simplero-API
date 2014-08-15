@@ -111,8 +111,8 @@ Subscribe to list
 ```json
 {
   "first_name":              "Calvin", 
-  "last_name":               "Conaway",
-  "email":                   "calvin@conaway.com",
+  "last_name":               "Correli",
+  "email":                   "calvin@simplero.com",
   "ip_address":              "77.66.17.105",
   "referrer":                "http://google.com/search?q=foo",
   "ref":                     123,
@@ -145,7 +145,7 @@ Unsubscribe from a list
 
 ```json
 {
-  "customer_email": "calvin@conaway.com"
+  "customer_email": "calvin@simplero.com"
 }
 ```
 
