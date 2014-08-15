@@ -30,7 +30,7 @@ Failure to provide a valid API key will result in a status 401 (unauthorized) wi
 ```
 
 
-Identify your appliaction in the User-Agent string
+Identify your application in the User-Agent string
 --------------------------------------------------
 
 Include the name of your application and a contact email in your User-Agent string like this:
