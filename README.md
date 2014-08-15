@@ -112,7 +112,7 @@ Subscribe to list
 {
   "first_name":              "Calvin", 
   "last_name":               "Conaway",
-  "email":                   "calvin@conaway.com", 
+  "email":                   "calvin@conaway.com",
   "ip_address":              "77.66.17.105",
   "referrer":                "http://google.com/search?q=foo",
   "ref":                     123,
@@ -136,6 +136,20 @@ This is only relevant when using Simplero's conversion tracking featuer.
 `referrer` should be the last external URL visited before the subscribe form.
 
 `track` is any keyword that you wish to associate with this opt-in, so you can track where people came from.
+
+
+Unsubscribe from a list
+-----------------
+
+* `POST /lists/1/unsubscribe.json` will unsubscribe a customer from the list
+
+```json
+{
+  "customer_email": "calvin@conaway.com"
+}
+```
+
+Everything except `customer_email` is ignored. `customer_email` is used as an indentifier.
 
 
 
