@@ -76,6 +76,7 @@ Get lists
   {
     "id":1942123930,
     "name":"Marianne's Universe",
+    "internal_name":"Main list",
     "confirm_pending_url":null,
     "created_at":"2013-10-23T16:45:14+02:00",
     "email_field_name":"89aet",
@@ -89,6 +90,7 @@ Get lists
   {
     "id":7253003287,
     "name":"Free tips",
+    "internal_name":"E-bomb offer 1",
     "confirm_pending_url":null,
     "created_at":"2013-10-23T16:45:14+02:00",
     "email_field_name":"atn23nh2e",
