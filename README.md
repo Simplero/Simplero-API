@@ -147,7 +147,7 @@ Unsubscribe from a list
 
 ```json
 {
-  "customer_email": "calvin@simplero.com"
+  "email": "calvin@simplero.com"
 }
 ```
 
