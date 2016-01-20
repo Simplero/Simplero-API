@@ -3,7 +3,7 @@ Simplero API Documentation
 
 The API is REST, using JSON for serialization, with no root element.
 
-You'll notice right away that this API is woefully incomplete. If you need anything, please ask.
+You'll notice right away that this API is not exactly complete. If you need anything, please ask.
 I'm Calvin Correli (calvin@simplero.com), the founder, CEO, and creator of Simplero, and I'm always open
 to your input, and we're flexible about adding additional API calls.
 
@@ -121,7 +121,8 @@ Subscribe to list
   "track":                   "api",
   "first_activated_at":      "2012-03-22T17:35:50-05:00",
   "auto_responder_start_at": "2012-03-22T17:35:50-05:00",
-  "landing_page_id":         123
+  "landing_page_id":         123,
+  "tags":                    "tag1,tag2"
 }
 ```
 
@@ -139,6 +140,7 @@ This is only relevant when using Simplero's conversion tracking featuer.
 
 `track` is any keyword that you wish to associate with this opt-in, so you can track where people came from.
 
+`tags` is a comma-separated string of tags to add to this contact. Individual tags will be trimmed of whitespace at the beginning and end. Everything else will be preserved as-is.
 
 Unsubscribe from a list
 -----------------
