@@ -126,6 +126,13 @@ By default we will not override any existing information, only add new. Set `ove
 
 Also included will be any custom contact fields.
 
+##### Error response:
+
+```json
+{ "error": "Comma-separated, error-messages" }
+```
+
+This will be sent using HTTP status code 422 Unprocessable Entity.
 
 Lists
 =====
