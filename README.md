@@ -66,18 +66,18 @@ curl -u "api_key:" -H 'Content-Type: application/json' -H 'User-Agent: Some app 
 Contacts
 ========
 
-Create contact
+Create/update contact
 --------------
 
-* `POST /customers.json` will create a new contact
+* `POST /customers.json` will create a new contact, or update an existing contact with the same email
 
 ##### POST request body:
 
 ```json
 {
+  "email":                   "calvin@simplero.com",
   "first_name":              "Calvin", 
   "last_name":               "Correli",
-  "email":                   "calvin@simplero.com",
   "ip_address":              "77.66.17.105",
   "referrer":                "http://google.com/search?q=foo",
   "ref":                     123,
@@ -85,9 +85,18 @@ Create contact
   "first_activated_at":      "2012-03-22T17:35:50-05:00",
   "auto_responder_start_at": "2012-03-22T17:35:50-05:00",
   "landing_page_id":         123,
-  "tags":                    "tag1,tag2"
+  "tags":                    "tag1,tag2",
+  "note":                    "A new note"
 }
 ```
+
+The only required argument is `email`.
+
+`tags` will add these as additional tags. You cannot remove tags with this API call.
+
+`note` will add a new note to the customer. You cannot remove notes this way.
+
+By default we will not override any existing information, only add new. Set `override` = `yes` to override existing values, except `email` which cannot be changed this way.
 
 ##### Response:
 
@@ -162,11 +171,14 @@ Get lists
 ]
 ```
 
+`id` is the id you'd need to use in the URL when subscribing or unsubscribing contacts.
 
 Subscribe to list
 -----------------
 
 * `POST /lists/1/subscribe.json` will add a new subscriber to the list
+
+Replace `1` with the id of the list to subscribe to.
 
 ##### POST request body:
 
@@ -204,12 +216,65 @@ This is only relevant when using Simplero's conversion tracking featuer.
 
 ##### Response:
 
+```json
+{
+  "id": 1073281992,
+  "list_id": 51750419,
+  "customer_id": 1046904945,
+  "return_to": "",
+  "active": false,
+  "confirmed": false,
+  "confirmed_at": null,
+  "unsubscribed_at": null,
+  "created_at": "2016-01-21T09:07:28.471-05:00",
+  "updated_at": "2016-01-21T09:07:28.471-05:00",
+  "affiliate_id": 157416808,
+  "ref": null,
+  "track": "api",
+  "first_activated_at": null,
+  "landing_page_id": 1067655620,
+  "confirmation_request_sent_at": "2016-01-21T09:07:28.471-05:00",
+  "confirmation_request_sent_count": 1,
+  "auto_responder_start_at": null,
+  "skip_auto_responses": false,
+  "ip_address": "192.168.1.2",
+  "referrer": "http://google.com/search?q=foo",
+  "auto_responder_paused_at": null,
+  "suspended_at": null,
+  "customer": {
+    "email": "calvin@correli.me",
+    "first_names": "Calvin",
+    "last_name": "Correli",
+    "id": 1046904945,
+    "created_at": "2016-01-21T09:07:28.471-05:00",
+    "updated_at": "2016-01-21T09:07:28.471-05:00",
+    "ref": null,
+    "track": null,
+    "affiliate_id": null,
+    "lifetime_value_cents_excl_tax": 0,
+    "lead_acquisition_cost_cents_excl_tax": 0,
+    "customer_acquisition_cost_cents_excl_tax": 0,
+    "do_not_contact": false,
+    "ip_address": null,
+    "referrer": null,
+    "name": "Calvin Correli",
+    "simplero_id": null,
+    "contact_since": "less than a minute",
+    "tag_names": "foo,bar"
+  }
+}
+```
+
 
 
 Unsubscribe from a list
------------------
+-----------------------
 
 * `POST /lists/1/unsubscribe.json` will unsubscribe a customer from the list
+
+Replace `1` with the id of the list to subscribe to.
+
+##### POST request body:
 
 ```json
 {
@@ -217,8 +282,17 @@ Unsubscribe from a list
 }
 ```
 
-Everything except `customer_email` is ignored. `customer_email` is used as an indentifier.
+`email` is the email address of the contact to unsubscribe from the list.
 
+##### Response:
+
+```json
+{ success: true }
+```
+
+When `success` is true it means the contact was successfully unsubscribed.
+
+When `success` is false, it means we couldn't find any contact with this email. The response will be returned using HTTP status code 400 Bad Request.
 
 
 Webhook endpoint
