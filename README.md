@@ -63,8 +63,8 @@ curl -u "api_key:" -H 'Content-Type: application/json' -H 'User-Agent: Some app 
 
 
 
-Lists
-=====
+Contacts
+========
 
 Create contact
 --------------
@@ -95,8 +95,8 @@ Create contact
 {
   "id":                                       1046901344,
   "email":                                    "calvin@simplero.com",
-  "created_at":                               "2016-01-20T22 at line 03
-  "updated_at":                               "2016-01-20T22 at line 03
+  "created_at":                               "2016-01-21T09:07:28.471-05:00",
+  "updated_at":                               "2016-01-21T09:07:28.471-05:00",
   "ref":                                      123,
   "track":                                    "api",
   "affiliate_id":                             157416808,
@@ -115,6 +115,11 @@ Create contact
 }
 ```
 
+Also included will be any custom contact fields.
+
+
+Lists
+=====
 
 
 Get lists
