@@ -66,10 +66,63 @@ curl -u "api_key:" -H 'Content-Type: application/json' -H 'User-Agent: Some app 
 Lists
 =====
 
+Create contact
+--------------
+
+* `POST /customers.json` will create a new contact
+
+##### POST request body:
+
+```json
+{
+  "first_name":              "Calvin", 
+  "last_name":               "Correli",
+  "email":                   "calvin@simplero.com",
+  "ip_address":              "77.66.17.105",
+  "referrer":                "http://google.com/search?q=foo",
+  "ref":                     123,
+  "track":                   "api",
+  "first_activated_at":      "2012-03-22T17:35:50-05:00",
+  "auto_responder_start_at": "2012-03-22T17:35:50-05:00",
+  "landing_page_id":         123,
+  "tags":                    "tag1,tag2"
+}
+```
+
+##### Response:
+
+```json
+{
+  "id":                                       1046901344,
+  "email":                                    "calvin@simplero.com",
+  "created_at":                               "2016-01-20T22 at line 03
+  "updated_at":                               "2016-01-20T22 at line 03
+  "ref":                                      123,
+  "track":                                    "api",
+  "affiliate_id":                             157416808,
+  "lifetime_value_cents_excl_tax":            0,
+  "lead_acquisition_cost_cents_excl_tax":     0,
+  "customer_acquisition_cost_cents_excl_tax": 0,
+  "first_names":                              "Calvin",
+  "last_name":                                "Correli",
+  "do_not_contact":                           false,
+  "ip_address":                               "192.168.1.2",
+  "referrer":                                 "http://google.com/search?q=foo",
+  "name":                                     "Calvin Correli",
+  "simplero_id":                              null,
+  "contact_since":                            "less than a minute",
+  "tag_names":                                "foo,bar"
+}
+```
+
+
+
 Get lists
 ---------
 
 * `GET /lists.json` will return all the account's lists
+
+##### Response:
 
 ```json
 [
@@ -110,6 +163,8 @@ Subscribe to list
 
 * `POST /lists/1/subscribe.json` will add a new subscriber to the list
 
+##### POST request body:
+
 ```json
 {
   "first_name":              "Calvin", 
@@ -141,6 +196,10 @@ This is only relevant when using Simplero's conversion tracking featuer.
 `track` is any keyword that you wish to associate with this opt-in, so you can track where people came from.
 
 `tags` is a comma-separated string of tags to add to this contact. Individual tags will be trimmed of whitespace at the beginning and end. Everything else will be preserved as-is.
+
+##### Response:
+
+
 
 Unsubscribe from a list
 -----------------
