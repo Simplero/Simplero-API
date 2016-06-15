@@ -134,6 +134,37 @@ Also included will be any custom contact fields.
 
 This will be sent using HTTP status code 422 Unprocessable Entity.
 
+
+* `POST /customers/add_tag.json` will add a tag to the contact with the given email
+
+##### POST request body:
+
+```json
+{
+  "email": "calvin@simplero.com",
+  "tag":   "new-tag-to-add"
+}
+```
+
+Responds with the contact object, like above. Will respond with 404 if no such contact exists.
+
+
+* `POST /customers/remove_tag.json` will remove a tag from the contact with the given email
+
+##### POST request body:
+
+```json
+{
+  "email": "calvin@simplero.com",
+  "tag":   "tag-to-remove"
+}
+```
+
+Responds with the contact object, like above. Will respond with 404 if no such contact exists.
+
+
+
+
 Lists
 =====
 
