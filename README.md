@@ -135,6 +135,9 @@ Also included will be any custom contact fields.
 This will be sent using HTTP status code 422 Unprocessable Entity.
 
 
+Add tag to contact
+--------------
+
 * `POST /customers/add_tag.json` will add a tag to the contact with the given email
 
 ##### POST request body:
@@ -148,6 +151,9 @@ This will be sent using HTTP status code 422 Unprocessable Entity.
 
 Responds with the contact object, like above. Will respond with 404 if no such contact exists.
 
+
+Remove tag from contact
+--------------
 
 * `POST /customers/remove_tag.json` will remove a tag from the contact with the given email
 
