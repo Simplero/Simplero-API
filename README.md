@@ -3,10 +3,6 @@ Simplero API Documentation
 
 The API is REST, using JSON for serialization, with no root element.
 
-You'll notice right away that this API is not exactly complete. If you need anything, please ask.
-I'm Calvin Correli (calvin@simplero.com), the founder, CEO, and creator of Simplero, and I'm always open
-to your input, and we're flexible about adding additional API calls.
-
 We also have one webhook endpoint available. See the bottom of this file.
 
 
@@ -60,6 +56,14 @@ curl -u "api_key:" -H 'Content-Type: application/json' -H 'User-Agent: Some app 
   -d '{ "first_name": "New Subscriber", "email": "someemail@example.test" }' \
   https://simplero.com/api/v1/lists/1/subscribe.json
 ```
+
+
+Need anything?
+--------------
+
+Need help using the API? Contact our support team using the HELP link inside your Simplero admin interface.
+
+Have a feature request for the API? File it [right here](https://github.com/Simplero/Roadmap/issues).
 
 
 
