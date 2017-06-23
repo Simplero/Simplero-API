@@ -90,7 +90,8 @@ Create/update contact
   "auto_responder_start_at": "2012-03-22T17:35:50-05:00",
   "landing_page_id":         123,
   "tags":                    "tag1,tag2",
-  "note":                    "A new note"
+  "note":                    "A new note",
+  "phone":                   "15551231234"
 }
 ```
 
@@ -99,6 +100,8 @@ The only required argument is `email`.
 `tags` will add these as additional tags. You cannot remove tags with this API call.
 
 `note` will add a new note to the customer. You cannot remove notes this way.
+
+`phone` is a sanitized phone number with country code first, eg. '15551231234'.
 
 By default we will not override any existing information, only add new. Set `override` = `yes` to override existing values, except `email` which cannot be changed this way.
 
@@ -124,7 +127,8 @@ By default we will not override any existing information, only add new. Set `ove
   "name":                                     "Calvin Correli",
   "simplero_id":                              null,
   "contact_since":                            "less than a minute",
-  "tag_names":                                "foo,bar"
+  "tag_names":                                "foo,bar",
+  "phone":                                    "15551231234"
 }
 ```
 
@@ -242,7 +246,8 @@ Replace `1` with the id of the list to subscribe to.
   "first_activated_at":      "2012-03-22T17:35:50-05:00",
   "auto_responder_start_at": "2012-03-22T17:35:50-05:00",
   "landing_page_id":         123,
-  "tags":                    "tag1,tag2"
+  "tags":                    "tag1,tag2",
+  "phone":                   "15551231234"
 }
 ```
 
@@ -261,6 +266,8 @@ This is only relevant when using Simplero's conversion tracking featuer.
 `track` is any keyword that you wish to associate with this opt-in, so you can track where people came from.
 
 `tags` is a comma-separated string of tags to add to this contact. Individual tags will be trimmed of whitespace at the beginning and end. Everything else will be preserved as-is.
+
+`phone` is a sanitized phone number with country code first, eg. '15551231234'.
 
 ##### Response:
 
@@ -308,7 +315,8 @@ This is only relevant when using Simplero's conversion tracking featuer.
     "name": "Calvin Correli",
     "simplero_id": null,
     "contact_since": "less than a minute",
-    "tag_names": "foo,bar"
+    "tag_names": "foo,bar",
+    "phone": "15551231234"
   }
 }
 ```
