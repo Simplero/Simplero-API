@@ -328,7 +328,7 @@ Unsubscribe from a list
 
 * `POST /lists/1/unsubscribe.json` will unsubscribe a customer from the list
 
-Replace `1` with the id of the list to subscribe to.
+Replace `1` with the id of the list to unsubscribe from.
 
 ##### POST request body:
 
