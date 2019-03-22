@@ -162,8 +162,40 @@ Also included will be any custom contact fields.
 This will be sent using HTTP status code 422 Unprocessable Entity.
 
 
+Get contact by ID
+-----------------
+
+* `GET /customers/123.json` will get a JSON representation of a contact, looked up by the internal ID. 
+
+Replace `123` with the ID of the contact you're interested, which you will have gotten from a previous call to the API.
+
+##### Response:
+
+Same as above.
+
+
+Find contact by email
+---------------------
+
+* `POST /customers/find.json` will get a JSON representation of a contact, looked up by email.
+
+##### POST request body:
+
+```json
+{
+  "email": "calvin@simplero.com"
+}
+```
+
+##### Response:
+
+Same as above.
+
+
+
+
 Add tag to contact
---------------
+------------------
 
 * `POST /customers/add_tag.json` will add a tag to the contact with the given email
 
