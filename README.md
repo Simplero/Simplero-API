@@ -63,16 +63,16 @@ Custom contact fields
 
 Custom contact fields (added under Contacts > Fields in your admin interface) can be set using their internal names, which look like "field\_(id)\_(subfield)". 
 
-The 'id' part is the internal id, and the subfield part depends on the type of field. For example, an address field will have subfields `address`, `address_2`, `postal_code`, `city`, `region_code`, and `country_code'.
+The 'id' part is the internal id, and the subfield part depends on the type of field. For example, an address field will have subfields `address`, `address_2`, `postal_code`, `city`, `region_code`, and `country_code`.
 
 In all, the field names to update an address field could look like this:
 
-* field_123_address
-* field_123_address_2
-* field_123_postal_code
-* field_123_city
-* field_123_region_code
-* field_123_country_code
+* `field_123_address`
+* `field_123_address_2`
+* `field_123_postal_code`
+* `field_123_city`
+* `field_123_region_code`
+* `field_123_country_code`
 
 When _reading_ the value of conact fields, you will get these, and you will also get aa combined field that includes a string representation of the entire value of the field, keyed by the label of the field. You can use whichever one you prefer.
 
