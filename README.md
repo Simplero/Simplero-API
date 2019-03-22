@@ -110,7 +110,8 @@ Create/update contact
   "landing_page_id":         123,
   "tags":                    "tag1,tag2",
   "note":                    "A new note",
-  "phone":                   "15551231234"
+  "phone":                   "15551231234",
+  "field_123_value":         "calvincorreli"
 }
 ```
 
@@ -147,7 +148,8 @@ By default we will not override any existing information, only add new. Set `ove
   "simplero_id":                              null,
   "contact_since":                            "less than a minute",
   "tag_names":                                "foo,bar",
-  "phone":                                    "15551231234"
+  "phone":                                    "15551231234",
+  "field_123_value":                          "calvincorreli"
 }
 ```
 
@@ -169,9 +171,8 @@ Get contact by ID
 
 Replace `123` with the ID of the contact you're interested, which you will have gotten from a previous call to the API.
 
-##### Response:
+Responds with the contact object, like above. Will respond with 404 if no such contact exists.
 
-Same as above.
 
 
 Find contact by email
@@ -187,10 +188,7 @@ Find contact by email
 }
 ```
 
-##### Response:
-
-Same as above.
-
+Responds with the contact object, like above. Will respond with 404 if no such contact exists.
 
 
 
