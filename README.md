@@ -74,7 +74,7 @@ In all, the field names to update an address field could look like this:
 * `field_123_region_code`
 * `field_123_country_code`
 
-When _reading_ the value of conact fields, you will get these, and you will also get aa combined field that includes a string representation of the entire value of the field, keyed by the label of the field. You can use whichever one you prefer.
+When _reading_ the value of custom contact fields, you will get the above, and you will also get aa combined field that includes a string representation of the entire value of the field, keyed by the label of the field. You can use whichever one you prefer.
 
 
 Need anything?
