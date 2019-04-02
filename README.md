@@ -94,7 +94,7 @@ Get account fields
 
 ##### Response:
 
-```json
+```
 [
   {
     "label":          "Name", 
