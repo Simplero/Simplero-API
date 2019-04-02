@@ -111,7 +111,8 @@ Get account fields
                           "method_name": "field_123_last_name"
                         }
                       ]
-  }
+  },
+  ...
 ]
 ```
 
