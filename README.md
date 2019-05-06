@@ -51,6 +51,8 @@ curl -u "_api_key_:" -H 'User-Agent: Some app (test@example.test)' https://simpl
 
 Replace `_api_key_` with your actual API key that you get from the Simplero Admin interface under Settings > Integrations.
 
+Note the color after your API key. That's important.
+
 To add or update something, include the JSON data with a `Content-Type` header (assuming your API key is "f37dTH32fP" - in reality, yours is going to be longer):
 
 ```shell
