@@ -46,13 +46,15 @@ Example request
 Here's what a complete request looks like:
 
 ```shell
-curl -u "api_key:" -H 'User-Agent: Some app (test@example.test)' https://simplero.com/api/v1/lists.json
+curl -u "_api_key_:" -H 'User-Agent: Some app (test@example.test)' https://simplero.com/api/v1/lists.json
 ```
 
-To add or update something, include the JSON data with a `Content-Type` header:
+Replace `_api_key_` with your actual API key that you get from the Simplero Admin interface under Settings > Integrations.
+
+To add or update something, include the JSON data with a `Content-Type` header (assuming your API key is "f37dTH32fP" - in reality, yours is going to be longer):
 
 ```shell
-curl -u "api_key:" -H 'Content-Type: application/json' -H 'User-Agent: Some app (email@example.test)' \
+curl -u "f37dTH32fP:" -H 'Content-Type: application/json' -H 'User-Agent: Some app (email@example.test)' \
   -d '{ "first_name": "New Subscriber", "email": "someemail@example.test" }' \
   https://simplero.com/api/v1/lists/1/subscribe.json
 ```
