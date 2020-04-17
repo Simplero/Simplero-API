@@ -78,7 +78,7 @@ In all, the field names to update an address field could look like this:
 * `field_123_region_code`
 * `field_123_country_code`
 
-When _reading_ the value of custom contact fields, you will get the above, and you will also get aa combined field that includes a string representation of the entire value of the field, keyed by the label of the field. You can use whichever one you prefer.
+When _reading_ the value of custom contact fields, you will get the above, and you will also get a combined field that includes a string representation of the entire value of the field, keyed by the label of the field. You can use whichever one you prefer.
 
 
 Need anything?
@@ -88,6 +88,37 @@ Need help using the API? Contact our support team using the HELP link inside you
 
 Have a feature request for the API? File it [right here](https://github.com/Simplero/Roadmap/issues).
 
+Account
+========
+
+Get account fields
+--------------
+
+* `GET /api/v1/account/fields.json` will return an array of the custom contact fields for your account.
+
+##### Response:
+
+```
+[
+  {
+    "label":          "Name", 
+    "method_name":    "field_123_value", 
+    "internal_name":  "Name", 
+    "field_type":     "Name", 
+    "subfields":      [
+                        {
+                          "name": "first_names", 
+                          "method_name": "field_123_first_names"
+                        }, 
+                        {
+                          "name": "last_name", 
+                          "method_name": "field_123_last_name"
+                        }
+                      ]
+  },
+  ...
+]
+```
 
 
 Contacts
