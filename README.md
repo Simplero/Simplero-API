@@ -1,13 +1,31 @@
-Simplero API Documentation
-==========================
-
 The API is REST, using JSON for serialization, with no root element.
 
 We also have one webhook endpoint available. See the bottom of this file.
 
+   * [Making a request](#making-a-request)
+      * [Authentication](#authentication)
+      * [Identify your application in the User-Agent string](#identify-your-application-in-the-user-agent-string)
+      * [Example request](#example-request)
+      * [Custom contact fields](#custom-contact-fields)
+      * [Need anything?](#need-anything)
+   * [Contacts](#contacts)
+      * [Create/update contact](#createupdate-contact)
+      * [Get contact by ID](#get-contact-by-id)
+      * [Find contact by email](#find-contact-by-email)
+      * [Add tag to contact](#add-tag-to-contact)
+      * [Remove tag from contact](#remove-tag-from-contact)
+   * [Lists](#lists)
+      * [Get lists](#get-lists)
+      * [Subscribe to list](#subscribe-to-list)
+      * [Unsubscribe from a list](#unsubscribe-from-a-list)
+   * [Products](#products)
+      * [Get products](#get-products)
+      * [Get product by ID](#get-product-by-id)
+   * [Webhook endpoint](#webhook-endpoint)
+
 
 Making a request
-----------------
+================
 
 All API request URLs start with `https://simplero.com/api/v1/`. 
 
@@ -46,12 +64,10 @@ Example request
 Here's what a complete request looks like:
 
 ```shell
-curl -u "_api_key_:" -H 'User-Agent: Some app (test@example.test)' https://simplero.com/api/v1/lists.json
+curl -u "API_KEY:" -H 'User-Agent: Some app (test@example.test)' https://simplero.com/api/v1/lists.json
 ```
 
-Replace `_api_key_` with your actual API key that you get from the Simplero Admin interface under Settings > Integrations.
-
-Note the color after your API key. That's important.
+Replace `API_KEY` with your actual API key that you get from the Simplero Admin interface under Settings > Integrations. Note the colon after your API key. That's important.
 
 To add or update something, include the JSON data with a `Content-Type` header (assuming your API key is "f37dTH32fP" - in reality, yours is going to be longer):
 
@@ -65,9 +81,9 @@ curl -u "f37dTH32fP:" -H 'Content-Type: application/json' -H 'User-Agent: Some a
 Custom contact fields
 ---------------------
 
-Custom contact fields (added under Contacts > Fields in your admin interface) can be set using their internal names, which look like "field\_(id)\_(subfield)". 
+Custom contact fields (added under Contacts > Fields in your admin interface) can be set using their internal names, which look like `field_ID_SUBFIELD`.
 
-The 'id' part is the internal id, and the subfield part depends on the type of field. When _reading_ the value of custom contact fields, you will get all subfields, and you will also get a combined field that includes a string representation of the entire value of the field, keyed by the label of the field. You can use whichever one you prefer.
+The `ID` part is the internal ID, and the `SUBFIELD` part depends on the type of field. When _reading_ the value of custom contact fields, you will get all subfields, and you will also get a combined field that includes a string representation of the entire value of the field, keyed by the label of the field. You can use whichever one you prefer.
 
 **Address fields**
 
@@ -97,7 +113,7 @@ Need anything?
 
 Need help using the API? Contact our support team using the HELP link inside your Simplero admin interface.
 
-Have a feature request for the API? File it [right here](https://github.com/Simplero/Roadmap/issues).
+Have a feature request for the API? Submit it [here](https://help.simplero.com/forum).
 
 
 
@@ -107,9 +123,9 @@ Contacts
 Create/update contact
 --------------
 
-* `POST /customers.json` will create a new contact, or update an existing contact with the same email
+`POST /customers.json` will create a new contact, or update an existing contact with the same email
 
-##### POST request body:
+**POST request body:**
 
 ```json
 {
@@ -140,7 +156,7 @@ The only required argument is `email`.
 
 By default we will not override any existing information, only add new. Set `override` = `yes` to override existing values, except `email` which cannot be changed this way.
 
-##### Response:
+**Response:**
 
 ```json
 {
@@ -170,7 +186,7 @@ By default we will not override any existing information, only add new. Set `ove
 
 Also included will be any custom contact fields.
 
-##### Error response:
+**Error response:**
 
 ```json
 { "error": "Comma-separated, error-messages" }
@@ -182,7 +198,7 @@ This will be sent using HTTP status code 422 Unprocessable Entity.
 Get contact by ID
 -----------------
 
-* `GET /customers/123.json` will get a JSON representation of a contact, looked up by the internal ID. 
+`GET /customers/123.json` will get a JSON representation of a contact, looked up by the internal ID. 
 
 Replace `123` with the ID of the contact you're interested, which you will have gotten from a previous call to the API.
 
@@ -193,9 +209,9 @@ Responds with the contact object, like above. Will respond with 404 if no such c
 Find contact by email
 ---------------------
 
-* `POST /customers/find.json` will get a JSON representation of a contact, looked up by email.
+`POST /customers/find.json` will get a JSON representation of a contact, looked up by email.
 
-##### POST request body:
+**POST request body:**
 
 ```json
 {
@@ -210,9 +226,9 @@ Responds with the contact object, like above. Will respond with 404 if no such c
 Add tag to contact
 ------------------
 
-* `POST /customers/add_tag.json` will add a tag to the contact with the given email
+`POST /customers/add_tag.json` will add a tag to the contact with the given email
 
-##### POST request body:
+**POST request body:**
 
 ```json
 {
@@ -227,9 +243,9 @@ Responds with the contact object, like above. Will respond with 404 if no such c
 Remove tag from contact
 --------------
 
-* `POST /customers/remove_tag.json` will remove a tag from the contact with the given email
+`POST /customers/remove_tag.json` will remove a tag from the contact with the given email
 
-##### POST request body:
+**POST request body:**
 
 ```json
 {
@@ -250,9 +266,9 @@ Lists
 Get lists
 ---------
 
-* `GET /lists.json` will return all the account's lists
+`GET /lists.json` will return all the account's lists
 
-##### Response:
+**Response:**
 
 ```json
 [
@@ -292,11 +308,11 @@ Get lists
 Subscribe to list
 -----------------
 
-* `POST /lists/1/subscribe.json` will add a new subscriber to the list
+`POST /lists/1/subscribe.json` will add a new subscriber to the list
 
 Replace `1` with the id of the list to subscribe to.
 
-##### POST request body:
+**POST request body:**
 
 ```json
 {
@@ -333,7 +349,7 @@ This is only relevant when using Simplero's conversion tracking featuer.
 
 `phone` is a sanitized phone number with country code first, eg. '15551231234'.
 
-##### Response:
+**Response:**
 
 ```json
 {
@@ -390,11 +406,11 @@ This is only relevant when using Simplero's conversion tracking featuer.
 Unsubscribe from a list
 -----------------------
 
-* `POST /lists/1/unsubscribe.json` will unsubscribe a customer from the list
+`POST /lists/1/unsubscribe.json` will unsubscribe a customer from the list
 
 Replace `1` with the id of the list to unsubscribe from.
 
-##### POST request body:
+**POST request body:**
 
 ```json
 {
@@ -404,7 +420,7 @@ Replace `1` with the id of the list to unsubscribe from.
 
 `email` is the email address of the contact to unsubscribe from the list.
 
-##### Response:
+**Response:**
 
 ```json
 { success: true }
@@ -415,14 +431,54 @@ When `success` is true it means the contact was successfully unsubscribed.
 When `success` is false, it means we couldn't find any contact with this email. The response will be returned using HTTP status code 400 Bad Request.
 
 
+Products
+========
+
+Get products
+------------
+
+`GET /products.json` will list all the account's products.
+
+**Response:**
+```JSON
+[
+  {
+    "id": 123,
+    "name": "My product",
+    "handle": "my-product" ,
+    "sales_page_url": null,
+    "received_price_cents": 3000,
+    "incoming_price_cents": 0,
+    "sales_price_cents": 3000
+  }
+]
+```
+
+Get product by ID
+-----------------
+
+`GET /products/123.json` will get product info.
+
+**Response:**
+```JSON
+{
+  "id": 123,
+  "name": "My product",
+  "handle": "my-product" ,
+  "sales_page_url": null,
+  "received_price_cents": 3000,
+  "incoming_price_cents": 0,
+  "sales_price_cents": 3000
+}
+```
+
+
 Webhook endpoint
 ================
 
 If you're using some other system for selling, and want to hook it up so you can automatically add people to your products in Simplero, which will give them access to the space, this is what you need.
 
-The URL is:
-
-* `POST https://simplero.com/webhook/products/1/purchase`
+The URL is `POST https://simplero.com/webhook/products/1/purchase`
 
 Replace the number 1 with the ID of the product you want to add people to. You can find that in the admin URL.
 
