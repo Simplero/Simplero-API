@@ -327,7 +327,8 @@ Replace `1` with the id of the list to subscribe to.
   "auto_responder_start_at": "2012-03-22T17:35:50-05:00",
   "landing_page_id":         123,
   "tags":                    "tag1,tag2",
-  "phone":                   "15551231234"
+  "phone":                   "15551231234",
+  "gdpr_consent":            true
 }
 ```
 
