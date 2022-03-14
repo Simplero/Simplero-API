@@ -21,6 +21,7 @@ We also have one webhook endpoint available. See the bottom of this file.
    * [Products](#products)
       * [Get products](#get-products)
       * [Get product by ID](#get-product-by-id)
+   * [Invoices](#invoices)
    * [Webhook endpoint](#webhook-endpoint)
 
 
@@ -473,6 +474,17 @@ Get product by ID
 }
 ```
 
+Invoices
+========
+
+`GET /invoices.json` will return invoice info. You can use the following parameters to filter:
+
+- `created_at_from` - ISO-8601 date/time, return invoices created at or after this time
+- `created_at_to` - ISO-8601 date/time, return invoices created before this time
+- `invoice_number_from` - String, return invoices with an invoice number alphabetically equal to or greater than this number
+- `invoice_number_to` - String, return invoices with an invoice number alphabetically less than this number
+
+20 invoices will be returned at a time. You can paginate using the `page` parameter.
 
 Webhook endpoint
 ================
