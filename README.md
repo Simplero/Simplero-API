@@ -483,6 +483,7 @@ Invoices
 - `created_at_to` - ISO-8601 date/time, return invoices created before this time
 - `invoice_number_from` - String, return invoices with an invoice number alphabetically equal to or greater than this number
 - `invoice_number_to` - String, return invoices with an invoice number alphabetically less than this number
+- `order_by_invoice_number` - Boolean, return invoices ordered by invoice_number in ascending order.
 
 20 invoices will be returned at a time. You can paginate using the `page` parameter.
 
