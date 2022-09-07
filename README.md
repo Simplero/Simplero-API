@@ -210,9 +210,9 @@ Responds with the contact object, like above. Will respond with 404 if no such c
 Find contact by email
 ---------------------
 
-`POST /customers/find.json` will get a JSON representation of a contact, looked up by email.
+`GET /customers/find.json` will get a JSON representation of a contact, looked up by email.
 
-**POST request body:**
+**GET request body:**
 
 ```json
 {
