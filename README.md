@@ -111,7 +111,7 @@ You can alternatively use `field_123_all` to set a complete number with the coun
 You can get a list of custom fields in Zapier's format:
 
 ```
-  http://simplero.test/api/v1/account/zapier_customer_action_fields
+http://simplero.com/api/v1/account/zapier_customer_action_fields
 ```
 
 Need anything?
@@ -360,7 +360,7 @@ This is only relevant when using Simplero's conversion tracking featuer.
 
 `phone` is a sanitized phone number with country code first, eg. '15551231234'.
 
-`field_1016668189_value`, `field_868371454_value`, `field_507274739_address` are example of custom fields that could be passed,
+`field_1016668189_value`, `field_868371454_value`, `field_507274739_address` are examples of custom fields that could be passed,
 check description of [Custom contact fields](#custom-contact-fields)
 
 **Response:**
