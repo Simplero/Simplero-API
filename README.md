@@ -437,7 +437,7 @@ When `success` is false, it means we couldn't find any contact with this email. 
 Find subscription by email
 -----------------------
 
-`POST /lists/1/subscriptions/find.json` will get a JSON representation of a subscription, looked up by email.
+`POST /lists/1/subscriptions/find.json` will get a JSON representation of an array of subscriptions, looked up by email.
 
 **POST request body:**
 
@@ -447,7 +447,9 @@ Find subscription by email
 }
 ```
 
-Responds with the subscription object, like above. Will respond with 404 if no such subscription exists.
+Responds with the array of subscription object. Will respond with empty array if no such subscription exists.
+Will respond with 404 if no such list exists.
+
 
 Products
 ========
@@ -493,7 +495,7 @@ Get product by ID
 Find purchase by email
 -----------------------
 
-`POST /products/1/purchases/find.json` will get a JSON representation of a purchase, looked up by email.
+`POST /products/1/purchases/find.json` will get a JSON representation of an array of purchases, looked up by email.
 
 **POST request body:**
 
@@ -503,7 +505,9 @@ Find purchase by email
 }
 ```
 
-Responds with the purchase object, like above. Will respond with 404 if no such purchase exists.
+Responds with the array of purchase object. Will respond with empty array if no such purchase exists.
+Will respond with 404 if no such product exists.
+
 
 Invoices
 ========
