@@ -18,9 +18,11 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Get lists](#get-lists)
       * [Subscribe to list](#subscribe-to-list)
       * [Unsubscribe from a list](#unsubscribe-from-a-list)
+      * [Find subscription by email](#find-subscription-by-email)
    * [Products](#products)
       * [Get products](#get-products)
       * [Get product by ID](#get-product-by-id)
+      * [Find purchase by email](#find-purchase-by-email)
    * [Invoices](#invoices)
    * [Webhook endpoint](#webhook-endpoint)
 
@@ -432,6 +434,22 @@ When `success` is true it means the contact was successfully unsubscribed.
 
 When `success` is false, it means we couldn't find any contact with this email. The response will be returned using HTTP status code 400 Bad Request.
 
+Find subscription by email
+-----------------------
+
+`POST /lists/1/subscriptions/find.json` will get a JSON representation of an array of subscriptions, looked up by email.
+
+**POST request body:**
+
+```json
+{
+  "email": "calvin@simplero.com"
+}
+```
+
+Responds with the array of subscription object. Will respond with empty array if no such subscription exists.
+Will respond with 404 if no such list exists.
+
 
 Products
 ========
@@ -473,6 +491,23 @@ Get product by ID
   "sales_price_cents": 3000
 }
 ```
+
+Find purchase by email
+-----------------------
+
+`POST /products/1/purchases/find.json` will get a JSON representation of an array of purchases, looked up by email.
+
+**POST request body:**
+
+```json
+{
+  "email": "calvin@simplero.com"
+}
+```
+
+Responds with the array of purchase object. Will respond with empty array if no such purchase exists.
+Will respond with 404 if no such product exists.
+
 
 Invoices
 ========
