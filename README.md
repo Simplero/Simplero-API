@@ -116,7 +116,7 @@ Need anything?
 
 Need help using the API? Contact our support team using the HELP link inside your Simplero admin interface.
 
-Have a feature request for the API? Submit it [here](https://help.simplero.com/forum).
+Have a feature request for the API? Submit it [here](https://requests.simplero.com).
 
 
 
