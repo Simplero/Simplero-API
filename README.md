@@ -24,6 +24,13 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Get product by ID](#get-product-by-id)
       * [Find purchase by email](#find-purchase-by-email)
    * [Invoices](#invoices)
+   * [Administratorships](#administratorships)
+      * [Get administratorships](#get-administratorships)
+      * [Get product by ID](#get-administratorship-by-id)
+      * [Get administratorship by email](#get-administratorship-by-id)
+      * [Create or update administratorship](#createupdate-administratorship)
+      * [Remove administratorship](#remove-administratorship)
+      * [Get admin roles](#admin-roles)
    * [Webhook endpoint](#webhook-endpoint)
 
 
@@ -528,6 +535,8 @@ NOTE: Prior to August 15, 2022, this call would also include unpaid charges, and
 
 Administratorships
 ========
+Get administratorships
+---------
 `GET /administratorships.json` will return all the account's administratorships
 **Response:**
 
