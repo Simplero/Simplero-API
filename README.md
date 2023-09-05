@@ -526,6 +526,188 @@ The invoices will be ordered by invoice_number in the order described by 'dir', 
 
 NOTE: Prior to August 15, 2022, this call would also include unpaid charges, and would order randomly, or ascending if you provided the `order_by_invoice_number` parameter.
 
+Administratorships
+========
+`GET /administratorships.json` will return all the account's administratorships
+**Response:**
+
+```json
+[
+  {
+    "id": 79565,
+    "user_id": 289386,
+    "account_id": 67112,
+    "created_at": "2022-08-27T14:52:34.000-04:00",
+    "updated_at": "2023-09-04T13:32:48.000-04:00",
+    "num_logins": 3,
+    "last_login_at": "2022-09-28T16:11:05.000-04:00",
+    "second_to_last_login_at": "2022-09-27T11:14:11.000-04:00",
+    "ticket_assignee": true,
+    "ticket_sms_alerts": false,
+    "show_on_ticket": false,
+    "notifications_seen": [],
+    "admin_role_id": 9,
+    "accessible_object_ids": {
+      "site": "all",
+      "worksheet": "all",
+      "course": "all",
+      "affiliate_program": "all",
+      "landing_page": "all",
+      "product": "all"
+    },
+    "invitation_id": null,
+    "enabled": true,
+    "can_self_grant_super_admin": false,
+    "admin_role": {
+      "name": "Support specialist"
+    }
+  },
+    {
+      "id": 79567,
+      "user_id": 2063600,
+      "account_id": 67112,
+      "created_at": "2022-08-27T17:17:24.000-04:00",
+      "updated_at": "2023-09-05T09:49:12.000-04:00",
+      "num_logins": 104,
+      "last_login_at": "2023-09-05T09:49:12.000-04:00",
+      "second_to_last_login_at": "2023-09-04T13:19:32.000-04:00",
+      "ticket_assignee": true,
+      "ticket_sms_alerts": false,
+      "show_on_ticket": false,
+      "notifications_seen": [],
+      "admin_role_id": 1,
+      "accessible_object_ids": {
+          "site": "all",
+          "worksheet": "all",
+          "course": "all",
+          "affiliate_program": "all",
+          "landing_page": "all",
+          "product": "all"
+      },
+      "invitation_id": null,
+      "enabled": true,
+      "can_self_grant_super_admin": false,
+      "admin_role": {
+          "name": "Co-Owner"
+      }
+    }
+]
+```
+
+Get administratorship by ID
+-----------------
+
+`GET /administratorships/123.json` will get a JSON representation of an administratorship, looked up by the internal ID. 
+
+Replace `123` with the ID of the administratorship you're interested, which you will have gotten from a previous call to the API.
+
+Responds with the contact object, like above. Will respond with 404 if no such contact exists.
+
+Find administratorship by email
+---------------------
+
+`POST /administratorship/find.json` will get a JSON representation of an administratorship, looked up by email.
+
+**POST request body:**
+
+```json
+{
+  "email": "calvin@simplero.com"
+}
+```
+
+Responds with the administratorship object, like above. Will respond with 404 if no such contact exists.
+
+Create/update administratorship
+--------------
+
+`POST /administratorships.json` will create a new administratorship, or update an existing administratorship with the same email.
+
+**POST request body:**
+
+```json
+{
+  "email":           "calvin@simplero.com",
+  "admin_role_id":   9,
+  "ticket_assignee": true,
+  "show_on_ticket":  true,
+  "autogenerate":    true,
+  "invitee_name":    "Calvin Correli",
+  "message":         "Welcome Calvin"
+}
+```
+
+The only required arguments are `email` and `admin_role_id`.
+
+`admin_role_id` can be one of the shared system roles, listed below, or one of the account's saved custom roles.
+
+System roles with their ID:
+```
+"Co-Owner" => 1
+"Admin" => 2
+"Basic admin" => 3
+"Assistant" => 8
+"Support specialist" => 9
+"Affiliate manager" => 10
+```
+
+`autogenerate` if you want to auto-generate a username and password for the admin. 
+
+`invitee_name` name of the new user if `autogenerate` is true  
+
+`message` optional message for the invitation.
+
+`ticket_assignee` and `show_on_ticket`  enable whether the admin can be assigned tickets and listed as a support team member in the tickets system (if you have Support tickets enabled in your account).
+
+When updating an existing administratorship, the relevant arguments are `email`, `admin_role_id`, `ticket_assignee`, and `show_on_ticket`.
+
+Remove administratorship
+--------------
+`DELETE /administratorships/123.json` will delete an administratorship with the given ID.
+
+
+Replace `123` with the ID of the administratorship you want to remove, which you will have gotten from a previous call to the API.
+
+Admin Roles
+--------------
+`GET /admin_roles.json` will return all the account's available admin roles, including saved custom roles (only available on the Skyrocket plan).
+```json
+[
+  {
+    "id": 1,
+    "name": "Co-Owner"
+  },
+  {
+    "id": 2,
+    "name": "Admin"
+  },
+  {
+    "id": 3,
+    "name": "Basic admin"
+  },
+  {
+    "id": 8,
+    "name": "Assistant"
+  },
+  {
+    "id": 9,
+    "name": "Support specialist"
+  },
+  {
+    "id": 10,
+    "name": "Affiliate manager"
+  },
+  {
+    "id": 67,
+    "name": "Custom Saved Role"
+  },
+  {
+    "id": 77,
+    "name": "Developer Role"
+  }
+]
+```
+
 
 Webhook endpoint
 ================
