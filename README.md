@@ -24,12 +24,12 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Get product by ID](#get-product-by-id)
       * [Find purchase by email](#find-purchase-by-email)
    * [Invoices](#invoices)
-   * [Administratorships](#administratorships)
-      * [Get administratorships](#get-administratorships)
-      * [Get administratorship by ID](#get-administratorship-by-id)
-      * [Get administratorship by email](#find-administratorship-by-email)
-      * [Create or update administratorship](#createupdate-administratorship)
-      * [Remove administratorship](#remove-administratorship)
+   * [Administrators](#administrators)
+      * [Get administrators](#get-administrators)
+      * [Get administrator by ID](#get-administrator-by-id)
+      * [Get administrator by email](#find-administratorship-by-email)
+      * [Create or update administrator](#createupdate-administrator)
+      * [Remove administrator](#remove-administrator)
       * [Get admin roles](#admin-roles)
    * [Webhook endpoint](#webhook-endpoint)
 
@@ -533,9 +533,9 @@ The invoices will be ordered by invoice_number in the order described by 'dir', 
 
 NOTE: Prior to August 15, 2022, this call would also include unpaid charges, and would order randomly, or ascending if you provided the `order_by_invoice_number` parameter.
 
-Administratorships
+Administrators
 ========
-Get administratorships
+Get administrators
 ---------
 `GET /administratorships.json` will return all the account's administratorships
 **Response:**
@@ -603,7 +603,7 @@ Get administratorships
 ]
 ```
 
-Get administratorship by ID
+Get administrator by ID
 -----------------
 
 `GET /administratorships/123.json` will get a JSON representation of an administratorship, looked up by the internal ID. 
@@ -612,7 +612,7 @@ Replace `123` with the ID of the administratorship you're interested, which you 
 
 Responds with the contact object, like above. Will respond with 404 if no such contact exists.
 
-Find administratorship by email
+Find administrator by email
 ---------------------
 
 `POST /administratorship/find.json` will get a JSON representation of an administratorship, looked up by email.
@@ -627,7 +627,7 @@ Find administratorship by email
 
 Responds with the administratorship object, like above. Will respond with 404 if no such contact exists.
 
-Create/update administratorship
+Create/update administrator
 --------------
 
 `POST /administratorships.json` will create a new administratorship, or update an existing administratorship with the same email.
@@ -642,6 +642,7 @@ Create/update administratorship
   "show_on_ticket":  true,
   "autogenerate":    true,
   "invitee_name":    "Calvin Correli",
+  "inviter_email":   "angel@simplero.com",
   "message":         "Welcome Calvin"
 }
 ```
@@ -664,13 +665,15 @@ System roles with their ID:
 
 `invitee_name` name of the new user if `autogenerate` is true  
 
+`ìnviter_email` email of one of the account administrators. If not provided, the inviter will be the account owner.
+
 `message` optional message for the invitation.
 
 `ticket_assignee` and `show_on_ticket`  enable whether the admin can be assigned tickets and listed as a support team member in the tickets system (if you have Support tickets enabled in your account).
 
 When updating an existing administratorship, the relevant arguments are `email`, `admin_role_id`, `ticket_assignee`, and `show_on_ticket`.
 
-Remove administratorship
+Remove administrator
 --------------
 `DELETE /administratorships/123.json` will delete an administratorship with the given ID.
 
