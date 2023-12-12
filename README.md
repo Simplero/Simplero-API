@@ -32,6 +32,7 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Create or update administrator](#createupdate-administrator)
       * [Remove administrator](#remove-administrator)
       * [Get admin roles](#admin-roles)
+   * [Asynchronous requests](#asynchronous-requests)
    * [Webhook endpoint](#webhook-endpoint)
 
 
@@ -440,77 +441,21 @@ Replace `1` with the id of the list to subscribe to.
 }
 ```
 
-The format of each entry under `subscriber_data` is the same as for the "Subscribe to list" endpoint. A maximum of 100 entries may be included in a single request.
+The format of each entry under `subscriber_data` is the same as for the "Subscribe to list" endpoint. A maximum of 1,000 
+entries may be included in a single request.
 
 **Response:**
 
 ```json
-[
-  {
-    "email": "calvin@correli.com",
-    "success": true,
-    "subscription": {
-      "id": 1073281992,
-      "list_id": 51750419,
-      "customer_id": 1046904945,
-      "return_to": "",
-      "active": false,
-      "confirmed": false,
-      "confirmed_at": null,
-      "unsubscribed_at": null,
-      "created_at": "2016-01-21T09:07:28.471-05:00",
-      "updated_at": "2016-01-21T09:07:28.471-05:00",
-      "affiliate_id": 157416808,
-      "ref": null,
-      "track": "api",
-      "first_activated_at": null,
-      "landing_page_id": 1067655620,
-      "confirmation_request_sent_at": "2016-01-21T09:07:28.471-05:00",
-      "confirmation_request_sent_count": 1,
-      "auto_responder_start_at": null,
-      "skip_auto_responses": false,
-      "ip_address": "192.168.1.2",
-      "referrer": "http://google.com/search?q=foo",
-      "auto_responder_paused_at": null,
-      "suspended_at": null,
-      "customer": {
-        "email": "calvin@correli.me",
-        "first_names": "Calvin",
-        "last_name": "Correli",
-        "id": 1046904945,
-        "created_at": "2016-01-21T09:07:28.471-05:00",
-        "updated_at": "2016-01-21T09:07:28.471-05:00",
-        "ref": null,
-        "track": null,
-        "affiliate_id": null,
-        "lifetime_value_cents_excl_tax": 0,
-        "lead_acquisition_cost_cents_excl_tax": 0,
-        "customer_acquisition_cost_cents_excl_tax": 0,
-        "do_not_contact": false,
-        "ip_address": null,
-        "referrer": null,
-        "name": "Calvin Correli",
-        "simplero_id": null,
-        "contact_since": "less than a minute",
-        "tag_names": "foo,bar",
-        "phone": "15551231234"
-      }
-    }
-  },
-  {
-    "email": "scalvin@simplero.com",
-    "success": false,
-    "errors": [
-      "Email is invalid"
-    ]
-  }
-]
+{
+     "token": "ABC123"
+}
 ```
 
-All records passed in will be referenced in the same order in the response. When the subscriber was successfully added, 
-`success` will be `true` and the response format is the same as "Subscribe to list". When the subscriber failed to be
-added, `success` will be `false` and an informational `errors` array will be provided.  
+This token may be used to [check the status of the request](#asynchronous-requests). 
 
+When the request is completed, The `result` attribute of the request will contain an array where the format of each 
+entry is the same as the response of the "Subscribe to list" endpoint.
 
 Unsubscribe from a list
 -----------------------
@@ -818,6 +763,35 @@ Admin Roles
 ]
 ```
 
+Asynchronous requests
+--------------
+
+Some API requests are asynchronous and do not complete immediately. You can use the requests endpoint to check the 
+status of these requests.
+
+`GET /requests/ABC123.json` will provide status on the request. Replace `ABC123` with the token you got from the 
+original request.
+
+```json
+{
+     "token": "ABC123",
+     "action": "bulk_subscribe",
+     "status": "success",
+     "enqueued_at": "2023-09-05T09:49:12.000-04:00",
+     "processing_started_at": "2023-09-05T09:49:12.000-04:00",
+     "completed_at": "2023-09-05T09:49:12.000-04:00",
+     "result": {
+          /* ... */
+     },
+```
+
+`status` can be:
+- `pending` - request has not started
+- `running` - request is being processed
+- `success` - request completed successfully
+- `failure` - request failed
+
+`result` will be populated with action-specific data. 
 
 Webhook endpoint
 ================
