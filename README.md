@@ -154,7 +154,9 @@ Create/update contact
   "tags":                    "tag1,tag2",
   "note":                    "A new note",
   "phone":                   "15551231234",
-  "field_123_value":         "calvincorreli"
+  "field_123_value":         "calvincorreli",
+  "gdpr_consent":            1,
+  "gdpr_consent_text":       "Subscribe to our newsletter"
 }
 ```
 
@@ -165,6 +167,8 @@ The only required argument is `email`.
 `note` will add a new note to the customer. You cannot remove notes this way.
 
 `phone` is a sanitized phone number with country code first, eg. '15551231234'.
+
+Pass `gdpr_consent` with a value of `1` to indicate GDPR consent was request and granted, `0` to indicate GDPR consent was requested but not granted, or omit if GDPR consent was not requested. `gdpr_consent_text` should be the text of the request (e.g. the label on the checkbox).
 
 By default we will not override any existing information, only add new. Set `override` = `yes` to override existing values, except `email` which cannot be changed this way.
 
