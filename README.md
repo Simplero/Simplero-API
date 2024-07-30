@@ -14,6 +14,7 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Find contact by email](#find-contact-by-email)
       * [Add tag to contact](#add-tag-to-contact)
       * [Remove tag from contact](#remove-tag-from-contact)
+      * [Course completions](#course-completions)
    * [Lists](#lists)
       * [Get lists](#get-lists)
       * [Subscribe to list](#subscribe-to-list)
@@ -39,7 +40,7 @@ We also have one webhook endpoint available. See the bottom of this file.
 Making a request
 ================
 
-All API request URLs start with `https://simplero.com/api/v1/`. 
+All API request URLs start with `https://simplero.com/api/v1/`.
 
 All requests have to be over HTTPS.
 
@@ -142,7 +143,7 @@ Create/update contact
 ```json
 {
   "email":                   "calvin@simplero.com",
-  "first_name":              "Calvin", 
+  "first_name":              "Calvin",
   "last_name":               "Correli",
   "ip_address":              "77.66.17.105",
   "referrer":                "http://google.com/search?q=foo",
@@ -214,7 +215,7 @@ This will be sent using HTTP status code 422 Unprocessable Entity.
 Get contact by ID
 -----------------
 
-`GET /customers/123.json` will get a JSON representation of a contact, looked up by the internal ID. 
+`GET /customers/123.json` will get a JSON representation of a contact, looked up by the internal ID.
 
 Replace `123` with the ID of the contact you're interested, which you will have gotten from a previous call to the API.
 
@@ -273,6 +274,55 @@ Remove tag from contact
 Responds with the contact object, like above. Will respond with 404 if no such contact exists.
 
 
+Course completions
+--------------
+
+`POST /customers/course_completions.json` will provide a broad view of the course progress across all sites and courses for a particular user
+
+**POST request body:**
+
+```json
+{
+  "email": "calvin@simplero.com"
+}
+```
+
+Response codes:
+
+- `401` if API key is invalid
+- `404` if contact is not found
+- `200` if contact is found
+
+200 response structure:
+
+```json
+{
+  "contact": {
+    "name": "Calvin Correli",
+    "email": "calvin@simplero.com",
+    "courses": [
+      {
+        "title": "My course",
+        "modules": [
+          {
+            "title": "My module",
+            "position": 1,
+            "completion": "20%",
+            "lessons": [
+              {
+                "title": "My lesson",
+                "position": 1,
+                "completion": "Not started" | "Completed" | "Viewed",
+                "views": 0
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
 
 
 Lists
@@ -332,7 +382,7 @@ Replace `1` with the id of the list to subscribe to.
 
 ```json
 {
-  "first_name":              "Calvin", 
+  "first_name":              "Calvin",
   "last_name":               "Correli",
   "email":                   "calvin@simplero.com",
   "ip_address":              "77.66.17.105",
@@ -350,10 +400,10 @@ Replace `1` with the id of the list to subscribe to.
 
 Everything except `email` is optional.
 
-`ip_address` should be the actual IP address that the actual customer used to subscribe to the list. 
+`ip_address` should be the actual IP address that the actual customer used to subscribe to the list.
 It should NOT be a private IP address, nor should it be faked or manipulated in any way.
 
-`landing_page_id` is the landing page (signup form) within Simplero that this conversion should be counted for. 
+`landing_page_id` is the landing page (signup form) within Simplero that this conversion should be counted for.
 This is only relevant when using Simplero's conversion tracking featuer.
 
 `ref` is the affiliate ref that this conversion should be attributed to.
@@ -445,7 +495,7 @@ Replace `1` with the id of the list to subscribe to.
 }
 ```
 
-The format of each entry under `subscriber_data` is the same as for the "Subscribe to list" endpoint. A maximum of 1,000 
+The format of each entry under `subscriber_data` is the same as for the "Subscribe to list" endpoint. A maximum of 1,000
 entries may be included in a single request.
 
 **Response:**
@@ -456,9 +506,9 @@ entries may be included in a single request.
 }
 ```
 
-This token may be used to [check the status of the request](#asynchronous-requests). 
+This token may be used to [check the status of the request](#asynchronous-requests).
 
-When the request is completed, The `result` attribute of the request will contain an array where the format of each 
+When the request is completed, The `result` attribute of the request will contain an array where the format of each
 entry is the same as the response of the "Subscribe to list" endpoint.
 
 Unsubscribe from a list
@@ -653,7 +703,7 @@ Get administrators
 Get administrator by ID
 -----------------
 
-`GET /administratorships/123.json` will get a JSON representation of an administratorship, looked up by the internal ID. 
+`GET /administratorships/123.json` will get a JSON representation of an administratorship, looked up by the internal ID.
 
 Replace `123` with the ID of the administratorship you're interested, which you will have gotten from a previous call to the API.
 
@@ -708,9 +758,9 @@ System roles with their ID:
 "Affiliate manager" => 10
 ```
 
-`autogenerate` if you want to auto-generate a username and password for the admin. 
+`autogenerate` if you want to auto-generate a username and password for the admin.
 
-`invitee_name` name of the new user if `autogenerate` is true  
+`invitee_name` name of the new user if `autogenerate` is true
 
 `ìnviter_email` email of one of the account administrators. If not provided, the inviter will be the account owner.
 
@@ -770,10 +820,10 @@ Admin Roles
 Asynchronous requests
 --------------
 
-Some API requests are asynchronous and do not complete immediately. You can use the requests endpoint to check the 
+Some API requests are asynchronous and do not complete immediately. You can use the requests endpoint to check the
 status of these requests.
 
-`GET /requests/ABC123.json` will provide status on the request. Replace `ABC123` with the token you got from the 
+`GET /requests/ABC123.json` will provide status on the request. Replace `ABC123` with the token you got from the
 original request.
 
 ```json
@@ -795,7 +845,7 @@ original request.
 - `success` - request completed successfully
 - `failure` - request failed
 
-`result` will be populated with action-specific data. 
+`result` will be populated with action-specific data.
 
 Webhook endpoint
 ================
