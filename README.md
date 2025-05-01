@@ -10,6 +10,7 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Need anything?](#need-anything)
    * [Contacts](#contacts)
       * [Create/update contact](#createupdate-contact)
+      * [Update contact credentials](#credentials-contact)
       * [Get contact by ID](#get-contact-by-id)
       * [Find contact by email](#find-contact-by-email)
       * [Add tag to contact](#add-tag-to-contact)
@@ -210,6 +211,66 @@ Also included will be any custom contact fields.
 ```
 
 This will be sent using HTTP status code 422 Unprocessable Entity.
+
+
+Credentials contact
+--------------
+
+`POST /customers/update_credentials.json` will update a contact's login credentials.
+
+Note: Use this API endpoint only with the consent of the contact. Be mindful of its use.
+
+**POST request body:**
+
+```json
+{
+  "email":                   "calvin@simplero.com",
+  "first_name":              "Calvin",
+  "last_name":               "Correli",
+  "update_login_email":      true
+}
+```
+
+For identification, you can pass a `id`, `token` or `email` field.
+
+**Response:**
+
+```json
+{
+  "id":                                       1046901344,
+  "email":                                    "calvin@simplero.com",
+  "created_at":                               "2016-01-21T09:07:28.471-05:00",
+  "updated_at":                               "2016-01-21T09:07:28.471-05:00",
+  "ref":                                      123,
+  "track":                                    "api",
+  "affiliate_id":                             157416808,
+  "lifetime_value_cents_excl_tax":            0,
+  "lead_acquisition_cost_cents_excl_tax":     0,
+  "customer_acquisition_cost_cents_excl_tax": 0,
+  "first_names":                              "Calvin",
+  "last_name":                                "Correli",
+  "do_not_contact":                           false,
+  "ip_address":                               "192.168.1.2",
+  "referrer":                                 "http://google.com/search?q=foo",
+  "name":                                     "Calvin Correli",
+  "simplero_id":                              null,
+  "contact_since":                            "less than a minute",
+  "tag_names":                                "foo,bar",
+  "phone":                                    "15551231234",
+  "field_123_value":                          "calvincorreli"
+}
+```
+
+Also included will be any custom contact fields.
+
+**Error response:**
+
+```json
+{ "error": "Comma-separated, error-messages" }
+```
+
+This will be sent using HTTP status code 422 Unprocessable Entity.
+Unexpected errors will have HTTP status 500
 
 
 Get contact by ID
