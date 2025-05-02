@@ -673,6 +673,10 @@ Find purchase by email
 Responds with the array of purchase object. Will respond with empty array if no such purchase exists.
 Will respond with 404 if no such product exists.
 
+Check if a user has an active subscription of a product
+-------------------------------------------------------
+(Please add documentation to check if a user has an active subscription to product X by their email)
+
 
 Invoices
 ========
