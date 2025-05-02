@@ -121,6 +121,11 @@ A phone field will have subfields:
 
 You can alternatively use `field_123_all` to set a complete number with the country calling code: "4455555555555".
 
+You can get a list of custom fields in Zapier's format:
+
+```
+http://simplero.com/api/v1/account/zapier_customer_action_fields
+```
 
 Need anything?
 --------------
@@ -455,7 +460,11 @@ Replace `1` with the id of the list to subscribe to.
   "landing_page_id":         123,
   "tags":                    "tag1,tag2",
   "phone":                   "15551231234",
-  "gdpr_consent":            true
+  "gdpr_consent":            true,
+
+  "field_1016668189_value":  "Green",
+  "field_868371454_value":   "Developer",
+  "field_507274739_address": "NY"
 }
 ```
 
@@ -476,6 +485,9 @@ This is only relevant when using Simplero's conversion tracking featuer.
 `tags` is a comma-separated string of tags to add to this contact. Individual tags will be trimmed of whitespace at the beginning and end. Everything else will be preserved as-is.
 
 `phone` is a sanitized phone number with country code first, eg. '15551231234'.
+
+`field_1016668189_value`, `field_868371454_value`, `field_507274739_address` are examples of custom fields that could be passed,
+check description of [Custom contact fields](#custom-contact-fields)
 
 **Response:**
 
