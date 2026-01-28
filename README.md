@@ -26,6 +26,7 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Get products](#get-products)
       * [Get product by ID](#get-product-by-id)
       * [Find purchase by email](#find-purchase-by-email)
+      * [Find purchase by ID or token](#find-purchase-by-id-token)
    * [Invoices](#invoices)
    * [Administrators](#administrators)
       * [Get administrators](#get-administrators)
@@ -672,6 +673,244 @@ Find purchase by email
 
 Responds with the array of purchase object. Will respond with empty array if no such purchase exists.
 Will respond with 404 if no such product exists.
+
+
+Find purchase by ID or token
+-----------------------
+
+`POST /products/1/purchases/find.json` will get a JSON representation of an array of purchases, looked up by ID or token.
+
+You can pass them on the URL as a query parameter or using the POST body.
+
+- `POST /products/1/purchases/find.json?id=<ID>`
+- `POST /products/1/purchases/find.json?token=<token>`
+
+**POST request body:**
+
+```json
+{
+  "id": "<ID>",
+  "token": "<token>"
+}
+```
+
+Responds with a single purchase object directly on the root element.
+Will respond with 404 if product or purchase does not exist.
+
+Example successul 200 OK response:
+
+```json
+{
+  "id": 10000001,
+  "account_id": 100000,
+  "product_id": 200000,
+  "customer_id": 30000001,
+  "affiliate_id": null,
+  "email_verified_at": null,
+  "state": "paid",
+  "ref": null,
+  "track": null,
+  "company_name": null,
+  "vat_no": null,
+  "address": null,
+  "postal_code": null,
+  "city": null,
+  "email": "user@example.com",
+  "purchased_at": "2026-01-28T12:41:47.000-05:00",
+  "refunded_at": null,
+  "welcome_email_sent_at": null,
+  "created_at": "2026-01-28T12:41:44.000-05:00",
+  "updated_at": "2026-01-28T12:41:48.000-05:00",
+  "token": "PURCHASE_TOKEN",
+  "first_failed_at": null,
+  "failure_count": 0,
+  "wants_marketing": true,
+  "wants_notifications": true,
+  "next_attempt_at": null,
+  "country_code": "US",
+  "phone_number": null,
+  "received_price_cents": 2700,
+  "received_shipping_cents": 0,
+  "received_tax_cents": 0,
+  "received_total_cents": 2700,
+  "tax_percent": 0.0,
+  "first_names": "FirstName",
+  "last_name": "LastName",
+  "freebie": false,
+  "phone_country_code": "US",
+  "active": true,
+  "incoming_price_cents": 0,
+  "incoming_total_cents": 0,
+  "tax_region_id": null,
+  "quantity": 1,
+  "address_2": null,
+  "canceled_at": null,
+  "marked_failed_at": null,
+  "landing_page_id": null,
+  "price_id": 400000,
+  "price_period_id": 500000,
+  "price_period_rep_no": 1,
+  "committed_until": null,
+  "auto_renew": false,
+  "period_ends_at": null,
+  "region_code": null,
+  "coupon_id": null,
+  "discount_type": "none",
+  "discount_percent": null,
+  "discount_cents": null,
+  "discount_on_renewal": true,
+  "ip_address": "0.0.0.0",
+  "upsold": true,
+  "offer_id": null,
+  "upsell_id": null,
+  "parent_purchase_id": null,
+  "donation_cents": 0,
+  "donation_on_renewal": false,
+  "mailing_id": 600000,
+  "affiliate_percentage": null,
+  "discount_on_installments": false,
+  "currency_code": "USD",
+  "renewed_at": null,
+  "renewal_warning_sent_at": null,
+  "discount_expires_at": null,
+  "refund_right_waived_by_id": null,
+  "refund_right_waived_at": null,
+  "refund_right_waived_ip": null,
+  "gdpr_consent_at": null,
+  "gdpr_consent_text": null,
+  "utm_adgroup": "",
+  "utm_campaign": "sample-campaign",
+  "utm_content": "",
+  "utm_keyword": "",
+  "utm_medium": "email",
+  "utm_source": "email-list",
+  "utm_term": "",
+  "vat_no_validated_at": null,
+  "vat_no_validation_result": null,
+  "cancellation_reason": null,
+  "replaces_purchase_id": null,
+  "trial_ending_warning_sent_at": null,
+  "time_since_last_charge_reminder_sent_at": null,
+  "checkout_started_at": "2026-01-28T12:41:44.000-05:00",
+  "payment_method_trial_ending_warning_sent_at": null,
+  "donation_strategy": "add",
+  "affiliate_fixed_amount": null,
+  "banked_days": null,
+  "banked_previous_plan": null,
+  "order_id": 700000,
+  "replace_purchase_after_expiry": false,
+  "replacement_purchase_price_id": null,
+  "review_required_at": null,
+  "checkout_from_iframe": false,
+  "funnel_step_id": null,
+  "paused_at": null,
+  "latest_flexpay_transaction_id": null,
+  "event_occurrence_id": null,
+  "sales_rep_id": null,
+  "royalty_purchase": false,
+  "subscription_change_period_ends_at": null,
+  "event_occurrence_participant_id": null,
+  "purchase_url": "https://example.com/purchases/PURCHASE_TOKEN",
+  "edit_purchase_url": "https://example.com/purchases/PURCHASE_TOKEN/edit",
+  "payment_processor_name": "Stripe",
+  "total_payment_processor_fee_cents": 108,
+  "last_charge_paid": {
+    "paid_at": "2026-01-28T12:41:47.000-05:00",
+    "our_price_cents": 2700,
+    "our_tax_cents": 0,
+    "our_total_cents": 2700
+  },
+  "product": {
+    "name": "Sample Product Name",
+    "manual_account_number": null
+  },
+  "payment_method": {
+    "cardtype": "visa"
+  },
+  "transactions": [
+    {
+      "id": 800000,
+      "transaction_id": "PAYMENT_INTENT_ID",
+      "state": "succeeded",
+      "transaction_type": "charge",
+      "currency_code": "USD",
+      "created_at": "2026-01-28T12:41:44.000-05:00",
+      "amount": 27,
+      "fee": 1.08,
+      "tax": 0.0
+    }
+  ],
+  "sales_rep_email": null,
+  "purchase": {
+    "purchase_id": 10000001,
+    "product_id": 200000,
+    "product_name": "Sample Product Name",
+    "created_at": "2026-01-28 12:41 -0500",
+    "purchased_at": "2026-01-28 12:41",
+    "state": "paid",
+    "name": "FirstName LastName",
+    "email": "user@example.com",
+    "company": null,
+    "vat_no": null,
+    "address": null,
+    "address_2": null,
+    "postal_code": null,
+    "city": null,
+    "region_code": null,
+    "region": null,
+    "country_code": "US",
+    "country": "United States",
+    "phone_country_code": "US",
+    "phone_number": null,
+    "vat_percent": 0.0,
+    "price_id": 400000,
+    "price_name": "Simple price",
+    "quantity": 1,
+    "received_amount": 27,
+    "received_shipping": 0.0,
+    "received_tax": 0.0,
+    "received_total": 27,
+    "incoming_amount_excl_tax_and_shipping": 0.0,
+    "payment_method_type": "credit_card",
+    "card_type": "visa",
+    "track": null,
+    "ref": null,
+    "affiliate_id": null,
+    "affiliate_name": null,
+    "affiliate_email": null,
+    "wants_marketing_emails": true,
+    "wants_any_emails": true,
+    "last_charge_at": "2026-01-28",
+    "next_charge_at": null,
+    "period_ends_at": null,
+    "currency": "USD",
+    "entrants": [
+      {
+        "id": 900000,
+        "created": "2026-01-28 12:41 -0500",
+        "updated": "2026-01-28 12:41 -0500",
+        "canceled_at": null,
+        "wants_notifications": true,
+        "first_name": "FirstName",
+        "last_name": "LastName",
+        "email": "user@example.com",
+        "simplero_id": "user_id",
+        "contact": {
+          "id": 30000001,
+          "email": "user@example.com",
+          "token": "CONTACT_TOKEN",
+          "name": "FirstName LastName",
+          "simplero_id": "user_id",
+          "contact_since": "about X months",
+          "tag_names": "sample-tag-1,sample-tag-2",
+          "phone": null
+        }
+      }
+    ]
+  },
+  "children": []
+}
+```
 
 
 Invoices
