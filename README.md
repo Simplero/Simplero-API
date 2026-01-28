@@ -26,7 +26,7 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Get products](#get-products)
       * [Get product by ID](#get-product-by-id)
       * [Find purchase by email](#find-purchase-by-email)
-      * [Find purchase by ID or token](#find-purchase-by-id-token)
+      * [Find purchase by ID or token](#find-purchase-by-id-or-token)
    * [Invoices](#invoices)
    * [Administrators](#administrators)
       * [Get administrators](#get-administrators)
