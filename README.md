@@ -9,25 +9,48 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Custom contact fields](#custom-contact-fields)
       * [Need anything?](#need-anything)
    * [Contacts](#contacts)
+      * [List all contacts](#list-all-contacts)
       * [Create/update contact](#createupdate-contact)
       * [Update contact credentials](#credentials-contact)
       * [Get contact by ID](#get-contact-by-id)
       * [Find contact by email](#find-contact-by-email)
       * [Add tag to contact](#add-tag-to-contact)
       * [Remove tag from contact](#remove-tag-from-contact)
+      * [Issue points to contact](#issue-points-to-contact)
       * [Course completions](#course-completions)
    * [Lists](#lists)
       * [Get lists](#get-lists)
       * [Subscribe to list](#subscribe-to-list)
-     *  [Bulk subscribe to list](#bulk-subscribe-to-list)
+      * [Bulk subscribe to list](#bulk-subscribe-to-list)
       * [Unsubscribe from a list](#unsubscribe-from-a-list)
       * [Find subscription by email](#find-subscription-by-email)
+   * [Tags](#tags)
+      * [Get tags](#get-tags)
+      * [Get tag by ID](#get-tag-by-id)
+      * [Tag a contact](#tag-a-contact)
+      * [Untag a contact](#untag-a-contact)
+   * [Segments](#segments)
+      * [Get segments](#get-segments)
+   * [Broadcasts](#broadcasts)
+      * [List broadcasts](#list-broadcasts)
+      * [Get broadcast by ID](#get-broadcast-by-id)
+      * [Create broadcast](#create-broadcast)
+      * [Send test email](#send-test-email)
+   * [Assets](#assets)
+      * [Upload asset](#upload-asset)
    * [Products](#products)
       * [Get products](#get-products)
       * [Get product by ID](#get-product-by-id)
+      * [Create purchase](#create-purchase)
       * [Find purchase by email](#find-purchase-by-email)
       * [Find purchase by ID or token](#find-purchase-by-id-or-token)
+      * [Search purchases](#search-purchases)
+   * [Automations](#automations)
+      * [List automations](#list-automations)
+      * [Start automation for contact](#start-automation-for-contact)
    * [Invoices](#invoices)
+   * [Point types](#point-types)
+   * [Affiliates](#affiliates)
    * [Administrators](#administrators)
       * [Get administrators](#get-administrators)
       * [Get administrator by ID](#get-administrator-by-id)
@@ -134,6 +157,30 @@ Have a feature request for the API? Submit it [here](https://simplero.community/
 
 Contacts
 ========
+
+List all contacts
+--------------
+
+`GET /customers.json` will return a paginated list of all contacts for the account.
+
+**Parameters:**
+- `page` - page number (0-indexed, default 0)
+
+Returns 20 contacts per page.
+
+**Response:**
+
+```json
+[
+  {
+    "id": 1046901344,
+    "token": "abc123",
+    "name": "Calvin Correli",
+    "email": "calvin@simplero.com"
+  }
+]
+```
+
 
 Create/update contact
 --------------
@@ -334,6 +381,32 @@ Remove tag from contact
 ```
 
 Responds with the contact object, like above. Will respond with 404 if no such contact exists.
+
+
+Issue points to contact
+--------------
+
+`POST /customers/issue_points.json` will issue points/credits to a contact.
+
+**POST request body:**
+
+```json
+{
+  "email": "calvin@simplero.com",
+  "point_type_id": 123,
+  "amount": 10
+}
+```
+
+Identify the contact by `email`, `id`, or `token`.
+
+**Response:**
+
+```json
+{ "success": true }
+```
+
+Returns 422 if the operation fails.
 
 
 Course completions
@@ -617,6 +690,255 @@ Responds with the array of subscription object. Will respond with empty array if
 Will respond with 404 if no such list exists.
 
 
+Tags
+====
+
+Get tags
+--------
+
+`GET /tags.json` will return all the account's tags.
+
+**Response:**
+
+```json
+[
+  {
+    "id": 123,
+    "name": "vip"
+  },
+  {
+    "id": 456,
+    "name": "customer"
+  }
+]
+```
+
+
+Get tag by ID
+-------------
+
+`GET /tags/123.json` will return a single tag by ID.
+
+**Response:**
+
+```json
+{
+  "id": 123,
+  "name": "vip"
+}
+```
+
+
+Tag a contact
+-------------
+
+`POST /tags/123/tag.json` will add the tag to a contact.
+
+Identify the contact using the `X-Customer-ID` or `X-Customer-Token` header, or the `customer_id` or `customer_token` parameter.
+
+**Response:**
+
+```json
+{ "success": true }
+```
+
+
+Untag a contact
+---------------
+
+`POST /tags/123/untag.json` will remove the tag from a contact.
+
+Identify the contact using the `X-Customer-ID` or `X-Customer-Token` header, or the `customer_id` or `customer_token` parameter.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "tag_found": true
+}
+```
+
+`tag_found` indicates whether the contact had the tag before the request.
+
+
+Segments
+========
+
+Get segments
+------------
+
+`GET /segments.json` will return all saved segments for the account, ordered by name.
+
+**Response:**
+
+```json
+[
+  {
+    "id": 123,
+    "name": "Active buyers",
+    "members_count": 542,
+    "calculated_at": "2026-02-28T12:00:00.000-05:00"
+  }
+]
+```
+
+
+Broadcasts
+==========
+
+List broadcasts
+---------------
+
+`GET /broadcasts.json` will return a paginated list of broadcasts, most recent first.
+
+**Parameters:**
+- `page` - page number (0-indexed, default 0)
+- `per_page` - results per page (1-100, default 20)
+
+**Response:**
+
+```json
+[
+  {
+    "id": 123,
+    "subject": "Weekly newsletter",
+    "name": "Weekly newsletter",
+    "state": "delivered",
+    "delivery_type": "immediately",
+    "deliver_at": null,
+    "delivered_at": "2026-02-28T12:00:00.000-05:00",
+    "sender_name": "Calvin",
+    "sender_email": "calvin@simplero.com",
+    "reply_to": "calvin@simplero.com",
+    "recipients_count": 1500,
+    "created_at": "2026-02-28T11:00:00.000-05:00",
+    "updated_at": "2026-02-28T12:05:00.000-05:00"
+  }
+]
+```
+
+
+Get broadcast by ID
+-------------------
+
+`GET /broadcasts/123.json` will return a single broadcast.
+
+Responds with the broadcast object, like above. Will respond with 404 if no such broadcast exists.
+
+
+Create broadcast
+----------------
+
+`POST /broadcasts.json` will create a new broadcast.
+
+Requires email sending to be enabled for the account.
+
+**POST request body:**
+
+```json
+{
+  "subject": "My broadcast",
+  "body": "<h1>Hello!</h1><p>This is my email.</p>",
+  "sender_name": "Calvin",
+  "sender_email": "calvin@simplero.com",
+  "reply_to": "calvin@simplero.com",
+  "email_template_id": 456,
+  "list_ids": [1, 2],
+  "segment_ids": [3],
+  "delivery_type": "now",
+  "deliver_at": "2026-03-01T09:00:00-05:00"
+}
+```
+
+**Parameters:**
+- `subject` - email subject line
+- `body` - email body (HTML)
+- `sender_name` - optional, defaults to account setting
+- `sender_email` - optional, defaults to account setting
+- `reply_to` - optional, defaults to account setting
+- `email_template_id` - optional, defaults to account default template
+- `list_ids` - array of list IDs to send to
+- `segment_ids` - array of saved segment IDs to send to
+- `delivery_type` - `"now"` (send immediately), `"later"` (schedule), or `"draft"` (save as draft, default)
+- `deliver_at` - ISO 8601 datetime, required when `delivery_type` is `"later"`
+
+When `delivery_type` is `"now"` or `"later"`, the broadcast is automatically queued for delivery.
+
+**Response:**
+
+Returns the broadcast object (like above) with HTTP status 201 Created.
+
+**Error response:**
+
+```json
+{ "error": "Error message" }
+```
+
+Returned with HTTP status 422 Unprocessable Entity, or 403 Forbidden if email sending is not enabled.
+
+
+Send test email
+---------------
+
+`POST /broadcasts/123/send_test.json` will send a test email for an existing broadcast.
+
+**POST request body:**
+
+```json
+{
+  "email": "test@example.com"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Test email sent to test@example.com"
+}
+```
+
+Returns 422 if the email address is blank or sending fails.
+
+
+Assets
+======
+
+Upload asset
+------------
+
+`POST /assets.json` will upload an image or file for use in email content.
+
+Send the file as a multipart form upload with the `file` parameter.
+
+```shell
+curl -u "API_KEY:" -H 'User-Agent: Some app (email@example.test)' \
+  -F "file=@/path/to/image.png" \
+  https://simplero.com/api/v1/assets.json
+```
+
+**Response:**
+
+```json
+{
+  "id": 123,
+  "filename": "image.png",
+  "content_type": "image/png",
+  "size": 45678,
+  "width": 800,
+  "height": 600,
+  "url": "https://assets.simplero.com/...",
+  "image_url": "https://assets.simplero.com/..."
+}
+```
+
+`image_url` is only present for image files after processing is complete. Use the `url` value in your email body HTML.
+
+Returns 422 if no file is provided or if the file fails validation.
+
+
 Products
 ========
 
@@ -657,6 +979,34 @@ Get product by ID
   "sales_price_cents": 3000
 }
 ```
+
+Create purchase
+----------------
+
+`POST /products/1/purchases.json` will create a freebie purchase on the product, giving the contact access.
+
+Replace `1` with the ID of the product.
+
+**Note:** The account must be activated (non-trial) to create purchases.
+
+**POST request body:**
+
+```json
+{
+  "email": "calvin@simplero.com",
+  "first_name": "Calvin",
+  "last_name": "Correli"
+}
+```
+
+The only required argument is `email`. A contact will be created if one doesn't already exist with that email.
+
+You can also use `first_names` instead of `first_name`, or `name` for a combined full name.
+
+**Response:**
+
+Returns the purchase object with HTTP status 201 Created.
+
 
 Find purchase by email
 -----------------------
@@ -913,6 +1263,70 @@ Example successul 200 OK response:
 ```
 
 
+Search purchases
+-----------------
+
+`GET /purchases/search.json` will search across all purchases in the account.
+
+**Parameters:**
+- `page` - page number (1-indexed, default 1)
+- `per_page` - results per page (1-100, default 20)
+- `filters[product_id]` - filter by product ID
+- `filters[state]` - filter by purchase state (e.g. `paid`, `refunded`, `canceled`)
+- `filters[created][start_at]` - ISO 8601 datetime, purchases created at or after
+- `filters[created][end_at]` - ISO 8601 datetime, purchases created before
+- `filters[first_successful_charge][start_at]` - ISO 8601 datetime, first charge at or after
+- `filters[first_successful_charge][end_at]` - ISO 8601 datetime, first charge before
+
+**Response:**
+
+Returns a paginated array of purchase objects.
+
+
+Automations
+===========
+
+List automations
+----------------
+
+`GET /automations.json` will return a paginated list of active automations, ordered by name.
+
+**Parameters:**
+- `page` - page number (0-indexed, default 0)
+- `per_page` - results per page (default 20)
+
+**Response:**
+
+```json
+[
+  {
+    "id": 123,
+    "name": "Welcome sequence"
+  },
+  {
+    "id": 456,
+    "name": "Re-engagement"
+  }
+]
+```
+
+
+Start automation for contact
+-----------------------------
+
+`POST /automations/123/start.json` will start the automation for a contact.
+
+Replace `123` with the ID of the automation.
+
+Identify the contact using the `X-Customer-ID` or `X-Customer-Token` header, or the `customer_id` or `customer_token` parameter.
+
+**Response:**
+
+```json
+{ "success": true }
+```
+
+
 Invoices
 ========
 
@@ -929,6 +1343,47 @@ The invoices will be ordered by invoice_number in the order described by 'dir', 
 20 invoices will be returned at a time. You can paginate using the `page` parameter.
 
 NOTE: Prior to August 15, 2022, this call would also include unpaid charges, and would order randomly, or ascending if you provided the `order_by_invoice_number` parameter.
+
+Point types
+===========
+
+`GET /point_types.json` will return all point/credit types for the account.
+
+**Response:**
+
+```json
+[
+  {
+    "id": 123,
+    "name": "Loyalty Points"
+  },
+  {
+    "id": 456,
+    "name": "Course Credits"
+  }
+]
+```
+
+
+Affiliates
+==========
+
+`GET /affiliates.json` will return all affiliates for the account, ordered by name.
+
+**Response:**
+
+```json
+[
+  {
+    "id": 123,
+    "name": "Calvin Correli",
+    "ref": "calvin123"
+  }
+]
+```
+
+`ref` is the affiliate's referral code used in tracking URLs.
+
 
 Administrators
 ========
