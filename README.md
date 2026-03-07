@@ -9,6 +9,7 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Custom contact fields](#custom-contact-fields)
       * [Need anything?](#need-anything)
    * [Contacts](#contacts)
+      * [List contacts](#list-contacts)
       * [Create/update contact](#createupdate-contact)
       * [Update contact credentials](#credentials-contact)
       * [Get contact by ID](#get-contact-by-id)
@@ -22,11 +23,21 @@ We also have one webhook endpoint available. See the bottom of this file.
      *  [Bulk subscribe to list](#bulk-subscribe-to-list)
       * [Unsubscribe from a list](#unsubscribe-from-a-list)
       * [Find subscription by email](#find-subscription-by-email)
+      * [List subscriptions](#list-subscriptions)
    * [Products](#products)
       * [Get products](#get-products)
       * [Get product by ID](#get-product-by-id)
       * [Find purchase by email](#find-purchase-by-email)
       * [Find purchase by ID or token](#find-purchase-by-id-or-token)
+   * [Tags](#tags)
+      * [Get tags](#get-tags)
+      * [Get tag by ID](#get-tag-by-id)
+   * [Broadcasts](#broadcasts)
+      * [Get broadcasts](#get-broadcasts)
+      * [Get broadcast by ID](#get-broadcast-by-id)
+      * [Create broadcast](#create-broadcast)
+      * [Send test broadcast](#send-test-broadcast)
+      * [Get broadcast activity](#get-broadcast-activity)
    * [Invoices](#invoices)
    * [Administrators](#administrators)
       * [Get administrators](#get-administrators)
@@ -134,6 +145,33 @@ Have a feature request for the API? Submit it [here](https://simplero.community/
 
 Contacts
 ========
+
+List contacts
+--------------
+
+`GET /customers.json` will return a paginated list of contacts.
+
+**Parameters:**
+
+- `page` — 0-indexed page number (default 0)
+- `per_page` — results per page, 1–100 (default 20)
+- `from` / `to` — filter by created_at (ISO 8601)
+- `updated_from` / `updated_to` — filter by updated_at (ISO 8601)
+- `tag_id` — filter contacts that have this tag
+
+**Response:**
+
+```json
+[
+  {
+    "id": 1046901344,
+    "token": "abc123",
+    "name": "Calvin Correli",
+    "email": "calvin@simplero.com"
+  }
+]
+```
+
 
 Create/update contact
 --------------
@@ -617,6 +655,40 @@ Responds with the array of subscription object. Will respond with empty array if
 Will respond with 404 if no such list exists.
 
 
+List subscriptions
+-----------------------
+
+`GET /subscriptions.json` will return a paginated list of subscriptions.
+
+**Parameters:**
+
+- `page` — 0-indexed page number (default 0)
+- `per_page` — results per page, 1–100 (default 20)
+- `list_id` — filter by list
+- `status` — `active`, `unsubscribed`, or `suspended`
+- `from` / `to` — filter by created_at (ISO 8601)
+
+**Response:**
+
+```json
+[
+  {
+    "id": 1073281992,
+    "list_id": 51750419,
+    "customer_id": 1046904945,
+    "active": true,
+    "confirmed": true,
+    "confirmed_at": "2016-01-21T09:07:28.471-05:00",
+    "first_activated_at": "2016-01-21T09:07:28.471-05:00",
+    "unsubscribed_at": null,
+    "suspended_at": null,
+    "created_at": "2016-01-21T09:07:28.471-05:00",
+    "status": "active"
+  }
+]
+```
+
+
 Products
 ========
 
@@ -624,6 +696,11 @@ Get products
 ------------
 
 `GET /products.json` will list all the account's products.
+
+**Parameters:**
+
+- `page` — 0-indexed page number (default 0)
+- `per_page` — results per page, 1–100 (default 20)
 
 **Response:**
 ```JSON
@@ -911,6 +988,182 @@ Example successul 200 OK response:
   "children": []
 }
 ```
+
+
+Tags
+====
+
+Get tags
+--------
+
+`GET /tags.json` will return a paginated list of tags.
+
+**Parameters:**
+
+- `page` — 0-indexed page number (default 0)
+- `per_page` — results per page, 1–100 (default 20)
+
+**Response:**
+
+```json
+[
+  {
+    "id": 123,
+    "name": "vip-customer"
+  }
+]
+```
+
+Get tag by ID
+-------------
+
+`GET /tags/123.json` will get a tag by its ID.
+
+**Response:**
+
+```json
+{
+  "id": 123,
+  "name": "vip-customer"
+}
+```
+
+
+Broadcasts
+==========
+
+Get broadcasts
+--------------
+
+`GET /broadcasts.json` will return a paginated list of broadcasts.
+
+**Parameters:**
+
+- `page` — 0-indexed page number (default 0)
+- `per_page` — results per page, 1–100 (default 20)
+- `from` / `to` — filter by deliver_at (ISO 8601)
+
+**Response:**
+
+```json
+[
+  {
+    "id": 123,
+    "subject": "Weekly newsletter",
+    "name": "Newsletter #42",
+    "state": "delivered",
+    "delivery_type": "immediately",
+    "deliver_at": "2026-01-15T10:00:00.000-05:00",
+    "delivered_at": "2026-01-15T10:01:23.000-05:00",
+    "sender_name": "Calvin",
+    "sender_email": "calvin@simplero.com",
+    "reply_to": null,
+    "recipients_count": 1000,
+    "sent_count": 998,
+    "delivered_count": 995,
+    "opens_count": 400,
+    "unique_opens_count": 350,
+    "clicks_count": 100,
+    "unique_clicks_count": 80,
+    "bounces_count": 3,
+    "unsubscribes_count": 2,
+    "spamreports_count": 0,
+    "open_rate": 35.18,
+    "click_rate": 8.04,
+    "bounce_rate": 0.3,
+    "unsubscribe_rate": 0.2,
+    "created_at": "2026-01-14T15:30:00.000-05:00",
+    "updated_at": "2026-01-15T10:01:23.000-05:00"
+  }
+]
+```
+
+Get broadcast by ID
+-------------------
+
+`GET /broadcasts/123.json` will get a broadcast by its ID or token.
+
+Responds with the broadcast object, like above. Will respond with 404 if no such broadcast exists.
+
+
+Create broadcast
+----------------
+
+`POST /broadcasts.json` will create a new broadcast.
+
+**POST request body:**
+
+```json
+{
+  "subject": "Weekly newsletter",
+  "body": "<h1>Hello!</h1><p>Here is your weekly update.</p>",
+  "sender_name": "Calvin",
+  "sender_email": "calvin@simplero.com",
+  "reply_to": "replies@simplero.com",
+  "email_template_id": 456,
+  "list_ids": [1, 2],
+  "segment_ids": [3],
+  "delivery_type": "later",
+  "deliver_at": "2026-01-20T10:00:00-05:00"
+}
+```
+
+`subject` is required. All other fields are optional.
+
+`delivery_type` can be `now` (send immediately), `later` (schedule for `deliver_at`), or omitted to save as a draft. When `delivery_type` is `later`, `deliver_at` is required (ISO 8601).
+
+Returns 201 with the broadcast object on success. Returns 422 with `{ "error": "..." }` on validation errors. Returns 403 if email sending is not enabled for the account.
+
+
+Send test broadcast
+-------------------
+
+`POST /broadcasts/123/send_test.json` will send a test email for the broadcast.
+
+**POST request body:**
+
+```json
+{
+  "email": "test@example.com"
+}
+```
+
+`email` is required.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "Test email sent to test@example.com"
+}
+```
+
+Returns 422 with `{ "error": "..." }` if email is missing or sending fails.
+
+
+Get broadcast activity
+----------------------
+
+`GET /broadcasts/123/activity.json` will return engagement stats for the broadcast.
+
+**Response:**
+
+```json
+{
+  "opened": [
+    { "id": 1046901344, "date": "2026-01-15T10:05:00.000-05:00" }
+  ],
+  "clicked": [
+    { "id": 1046901344, "date": "2026-01-15T10:06:30.000-05:00" }
+  ],
+  "bounced": [],
+  "unsubscribed": [],
+  "spamreported": []
+}
+```
+
+Each action type contains an array of contacts who performed that action, with their contact ID and the date of the action.
 
 
 Invoices
