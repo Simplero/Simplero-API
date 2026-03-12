@@ -17,6 +17,7 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Add tag to contact](#add-tag-to-contact)
       * [Remove tag from contact](#remove-tag-from-contact)
       * [Course completions](#course-completions)
+      * [Issue points](#issue-points)
    * [Lists](#lists)
       * [Get lists](#get-lists)
       * [Subscribe to list](#subscribe-to-list)
@@ -27,11 +28,16 @@ We also have one webhook endpoint available. See the bottom of this file.
    * [Products](#products)
       * [Get products](#get-products)
       * [Get product by ID](#get-product-by-id)
+      * [Create free purchase](#create-free-purchase)
       * [Find purchase by email](#find-purchase-by-email)
       * [Find purchase by ID or token](#find-purchase-by-id-or-token)
+      * [Search purchases](#search-purchases)
    * [Tags](#tags)
       * [Get tags](#get-tags)
       * [Get tag by ID](#get-tag-by-id)
+      * [Tag a contact using a tag ID](#tag-a-contact-using-a-tag-id)
+      * [Untag a contact using a tag ID](#untag-a-contact-using-a-tag-id)
+   * [Custom domains](#custom-domains)
    * [Broadcasts](#broadcasts)
       * [Get broadcasts](#get-broadcasts)
       * [Get broadcast by ID](#get-broadcast-by-id)
@@ -39,6 +45,8 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Send test broadcast](#send-test-broadcast)
       * [Get broadcast activity](#get-broadcast-activity)
    * [Invoices](#invoices)
+   * [Affiliates](#affiliates)
+   * [Point types](#point-types)
    * [Administrators](#administrators)
       * [Get administrators](#get-administrators)
       * [Get administrator by ID](#get-administrator-by-id)
@@ -46,6 +54,22 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Create or update administrator](#createupdate-administrator)
       * [Remove administrator](#remove-administrator)
       * [Get admin roles](#admin-roles)
+   * [Automations](#automations)
+      * [Get automations](#get-automations)
+      * [Start automation for a contact](#start-automation-for-a-contact)
+   * [Segments](#segments)
+   * [Assets](#assets)
+   * [Account and Zapier helper endpoints](#account-and-zapier-helper-endpoints)
+      * [Get account custom fields](#get-account-custom-fields)
+      * [Who am I for Zapier](#who-am-i-for-zapier)
+      * [Get Zapier customer action fields](#get-zapier-customer-action-fields)
+      * [Poll sample customers for new subscriptions](#poll-sample-customers-for-new-subscriptions)
+      * [Poll sample customers for deleted subscriptions](#poll-sample-customers-for-deleted-subscriptions)
+      * [Poll sample purchases for new purchases](#poll-sample-purchases-for-new-purchases)
+      * [Poll sample purchases for canceled purchases](#poll-sample-purchases-for-canceled-purchases)
+      * [Poll sample customers for new taggings](#poll-sample-customers-for-new-taggings)
+      * [Poll sample customers for deleted taggings](#poll-sample-customers-for-deleted-taggings)
+   * [Zapier subscriptions](#zapier-subscriptions)
    * [Asynchronous requests](#asynchronous-requests)
    * [Webhook endpoint](#webhook-endpoint)
 
@@ -62,6 +86,8 @@ Authentication
 --------------
 
 Requests are authenticated using HTTP Basic Auth, with the API key as the username, password left empty.
+
+You can also provide the API key in the `X-API-Key` request header instead of HTTP Basic Auth.
 
 Failure to provide a valid API key will result in a status 401 (unauthorized) with a JSON body of:
 
@@ -336,6 +362,8 @@ Find contact by email
 }
 ```
 
+You can also look up the contact by passing `id` or `token` instead of `email`.
+
 Responds with the contact object, like above. Will respond with 404 if no such contact exists.
 
 
@@ -354,6 +382,8 @@ Add tag to contact
 }
 ```
 
+You can also identify the contact with `id` or `token` instead of `email`.
+
 Responds with the contact object, like above. Will respond with 404 if no such contact exists.
 
 
@@ -370,6 +400,8 @@ Remove tag from contact
   "tag":   "tag-to-remove"
 }
 ```
+
+You can also identify the contact with `id` or `token` instead of `email`.
 
 Responds with the contact object, like above. Will respond with 404 if no such contact exists.
 
@@ -423,6 +455,48 @@ Response codes:
   }
 }
 ```
+
+Issue points
+------------
+
+`POST /customers/issue_points.json` will issue points to a contact.
+
+**POST request body:**
+
+```json
+{
+  "email": "calvin@simplero.com",
+  "point_type_id": 12,
+  "amount": 50,
+  "note": "Bonus points for attending the workshop live"
+}
+```
+
+You can identify the contact with `email`, `id`, or `token`.
+
+`point_type_id` and `amount` are required. `amount` must be greater than `0`.
+
+Use [`GET /point_types.json`](#point-types) to discover valid point types for the account.
+
+**Response:**
+
+```json
+{
+  "success": true
+}
+```
+
+**Error response:**
+
+```json
+{
+  "errors": [
+    "Point type is not a valid point type"
+  ]
+}
+```
+
+This will be sent using HTTP status code 422 Unprocessable Entity.
 
 
 Lists
@@ -735,6 +809,63 @@ Get product by ID
 }
 ```
 
+Create free purchase
+--------------------
+
+`POST /products/1/purchases.json` will create a free purchase for the product.
+
+Replace `1` with the id of the product.
+
+This endpoint only works on active, non-trial accounts.
+
+**POST request body:**
+
+```json
+{
+  "email": "calvin@simplero.com",
+  "first_name": "Calvin",
+  "last_name": "Correli",
+  "skip_contract": false
+}
+```
+
+`email` is required.
+
+You may also pass `first_names`, `name`, and `last_name` to help identify or create the billing contact.
+
+Set `skip_contract` to `true` if you do not want Simplero to generate the purchase contract.
+
+**Response:**
+
+Returns HTTP status code 201 Created with a Zapier-style purchase payload. The response includes the purchase data, the billing contact, and any entrants attached to the purchase.
+
+```json
+{
+  "purchase_id": 10000001,
+  "product_id": 200000,
+  "product_name": "Sample Product Name",
+  "state": "paid",
+  "name": "Calvin Correli",
+  "email": "calvin@simplero.com",
+  "currency": "USD",
+  "billing_contact": {
+    "id": 1046901344,
+    "name": "Calvin Correli",
+    "email": "calvin@simplero.com",
+    "token": "CONTACT_TOKEN"
+  },
+  "entrants": []
+}
+```
+
+If the account is not active, the endpoint returns HTTP status 400 with:
+
+```json
+{
+  "error": "Purchases can only be performed on active, non-trial accounts."
+}
+```
+
 Find purchase by email
 -----------------------
 
@@ -989,6 +1120,26 @@ Example successul 200 OK response:
 }
 ```
 
+Search purchases
+----------------
+
+`GET /purchases/search.json` will search purchases across the whole account.
+
+**Parameters:**
+
+- `page` — 1-indexed page number (default 1)
+- `per_page` — results per page, 1–100 (default 20)
+- `filters[product_id]` — filter by product ID
+- `filters[state]` — filter by purchase state
+- `filters[created][start_at]` / `filters[created][end_at]` — filter by purchase creation time (ISO 8601)
+- `filters[first_successful_charge][start_at]` / `filters[first_successful_charge][end_at]` — filter by the date of the first paid charge (ISO 8601)
+
+Results are ordered by `created_at` descending.
+
+**Response:**
+
+Returns an array of purchase objects in the same format as the purchase object returned by [Find purchase by ID or token](#find-purchase-by-id-or-token).
+
 
 Tags
 ====
@@ -1027,6 +1178,88 @@ Get tag by ID
   "name": "vip-customer"
 }
 ```
+
+Tag a contact using a tag ID
+----------------------------
+
+`POST /tags/123/tag.json` will add an existing tag to a contact.
+
+Replace `123` with the id of the tag.
+
+**POST request body:**
+
+```json
+{
+  "email": "calvin@simplero.com"
+}
+```
+
+`email` is required.
+
+If the email does not already belong to a contact in the account, Simplero will create that contact first and then apply the tag.
+
+**Response:**
+
+```json
+{
+  "success": true
+}
+```
+
+Untag a contact using a tag ID
+------------------------------
+
+`POST /tags/123/untag.json` will remove an existing tag from a contact.
+
+Replace `123` with the id of the tag.
+
+**POST request body:**
+
+```json
+{
+  "email": "calvin@simplero.com"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "tag_found": true
+}
+```
+
+`tag_found` is `false` when the contact exists but does not currently have that tag.
+
+
+Custom domains
+==============
+
+Check whether a domain is configured
+------------------------------------
+
+`GET /domain_configured_in_simplero.json?domain=example.com` will check whether `www.example.com` is configured in an active Simplero account.
+
+This endpoint does not require API authentication.
+
+**Successful response:**
+
+```json
+{
+  "message": "domain is configured"
+}
+```
+
+**Not found response:**
+
+```json
+{
+  "message": "domain is not configured"
+}
+```
+
+The endpoint returns HTTP status 200 when the domain is configured and 404 when it is not.
 
 
 Broadcasts
@@ -1173,15 +1406,52 @@ Invoices
 
 - `created_at_from` - ISO-8601 date/time, return invoices created at or after this time
 - `created_at_to` - ISO-8601 date/time, return invoices created before this time
+- `paid_at_from` - ISO-8601 date/time, return invoices paid at or after this time
+- `paid_at_to` - ISO-8601 date/time, return invoices paid before this time
 - `invoice_number_from` - String, return invoices with an invoice number alphabetically equal to or greater than this number
 - `invoice_number_to` - String, return invoices with an invoice number alphabetically less than this number
 - `dir` - String, case-insensitive: Sort order. 'asc' or 'desc'. Default 'asc'.
+- `page` - 1-indexed page number. 20 invoices are returned at a time.
 
 The invoices will be ordered by invoice_number in the order described by 'dir', default ascending.
 
 20 invoices will be returned at a time. You can paginate using the `page` parameter.
 
 NOTE: Prior to August 15, 2022, this call would also include unpaid charges, and would order randomly, or ascending if you provided the `order_by_invoice_number` parameter.
+Affiliates
+==========
+
+`GET /affiliates.json` will return all affiliates for the account.
+
+**Response:**
+
+```json
+[
+  {
+    "id": 123,
+    "name": "Jane Affiliate",
+    "ref": "jane-affiliate"
+  }
+]
+```
+
+
+Point types
+===========
+
+`GET /point_types.json` will return all point types available on the account. These IDs are what you use with [`POST /customers/issue_points.json`](#issue-points).
+
+**Response:**
+
+```json
+[
+  {
+    "id": 12,
+    "name": "Reward points"
+  }
+]
+```
+
 
 Administrators
 ========
@@ -1265,7 +1535,7 @@ Responds with the contact object, like above. Will respond with 404 if no such c
 Find administrator by email
 ---------------------
 
-`POST /administratorship/find.json` will get a JSON representation of an administratorship, looked up by email.
+`POST /administratorships/find.json` will get a JSON representation of an administratorship, looked up by email.
 
 **POST request body:**
 
@@ -1369,6 +1639,333 @@ Admin Roles
   }
 ]
 ```
+Automations
+===========
+
+Get automations
+---------------
+
+`GET /automations.json` will return the account's active automations.
+
+**Parameters:**
+
+- `page` — 0-indexed page number (default 0)
+
+20 automations are returned per page.
+
+**Response:**
+
+```json
+[
+  {
+    "id": 123,
+    "name": "Welcome sequence"
+  }
+]
+```
+
+Start automation for a contact
+------------------------------
+
+`POST /automations/123/start.json` will start the automation for a contact.
+
+Replace `123` with the id of the automation.
+
+**POST request body:**
+
+```json
+{
+  "email": "calvin@simplero.com"
+}
+```
+
+`email` is the recommended way to identify the contact. If the contact does not exist yet, Simplero will create it first.
+
+**Response:**
+
+```json
+{
+  "success": true
+}
+```
+
+If neither a contact email nor a valid contact identifier is provided, the endpoint returns HTTP status 400 with:
+
+```json
+{
+  "success": false,
+  "reason": "customer_not_found"
+}
+```
+
+
+Segments
+========
+
+`GET /segments.json` will return the account's saved segments.
+
+**Response:**
+
+```json
+[
+  {
+    "id": 123,
+    "name": "Customers with active subscriptions",
+    "members_count": 432,
+    "calculated_at": "2026-01-15T10:01:23.000-05:00"
+  }
+]
+```
+
+
+Assets
+======
+
+`POST /assets.json` will upload a file into the account's assets library.
+
+Send this request as `multipart/form-data`, with the file in the `file` parameter.
+
+**Example request:**
+
+```shell
+curl -u "API_KEY:" \
+  -H 'User-Agent: Some app (test@example.test)' \
+  -F "file=@/path/to/image.png" \
+  https://simplero.com/api/v1/assets.json
+```
+
+**Response:**
+
+```json
+{
+  "id": 123,
+  "filename": "image.png",
+  "content_type": "image/png",
+  "size": 123456,
+  "width": 1200,
+  "height": 628,
+  "url": "https://assets.simplero.com/...",
+  "image_url": "https://assets.simplero.com/..."
+}
+```
+
+`image_url` is present for ready image assets. For non-image assets it will be `null`.
+
+If `file` is missing, the endpoint returns HTTP status 422 with:
+
+```json
+{
+  "error": "File is required"
+}
+```
+
+
+Account and Zapier helper endpoints
+===================================
+
+These endpoints are mainly used when connecting Simplero to Zapier or when building tooling that needs account-specific field metadata and sample payloads.
+
+Get account custom fields
+-------------------------
+
+`GET /account/fields.json` will return the account's contact form fields.
+
+**Response:**
+
+```json
+[
+  {
+    "label": "Instagram handle",
+    "internal_name": "instagram_handle",
+    "method_name": "field_123_value",
+    "field_type": "Text field",
+    "subfields": [
+      {
+        "name": "value",
+        "method_name": "field_123_value"
+      }
+    ]
+  }
+]
+```
+
+Who am I for Zapier
+-------------------
+
+`GET /account/zapier_who_am_i.json` will return base account and user information for a Zapier connection test.
+
+**Response:**
+
+```json
+[
+  {
+    "id": 12345,
+    "account": {
+      "name": "My Simplero account",
+      "host": "myaccount.simplero.com"
+    },
+    "user": {
+      "name": "Calvin Correli",
+      "username": "calvin"
+    }
+  }
+]
+```
+
+Get Zapier customer action fields
+---------------------------------
+
+`GET /account/zapier_customer_action_fields.json` will return the contact custom fields in Zapier's action-field format.
+
+**Response:**
+
+```json
+[
+  {
+    "type": "unicode",
+    "key": "field_123_value",
+    "label": "Instagram handle",
+    "required": false
+  }
+]
+```
+
+Complex field types may produce multiple entries, for example address and phone subfields.
+
+Poll sample customers for new subscriptions
+-------------------------------------------
+
+`GET /account/zapier_new_subscription_poll.json` will return sample customer payloads for the "new subscription" Zapier trigger.
+
+Optionally pass `list_id` to bias the sample data toward a specific list.
+
+**Response:**
+
+```json
+{
+  "results": [
+    {
+      "id": 42,
+      "note": null,
+      "email": "john@doe.com",
+      "name": "John Doe",
+      "tag_names": ""
+    }
+  ]
+}
+```
+
+Poll sample customers for deleted subscriptions
+-----------------------------------------------
+
+`GET /account/zapier_delete_subscription_poll.json` returns the same payload shape as the new subscription poll endpoint.
+
+Poll sample purchases for new purchases
+---------------------------------------
+
+`GET /account/zapier_new_purchase_poll.json` will return sample purchase payloads for the "new purchase" Zapier trigger.
+
+**Response:**
+
+```json
+{
+  "results": [
+    {
+      "purchase_id": 10000001,
+      "product_id": 200000,
+      "product_name": "Sample Product Name",
+      "state": "paid",
+      "email": "user@example.com"
+    }
+  ]
+}
+```
+
+Poll sample purchases for canceled purchases
+--------------------------------------------
+
+`GET /account/zapier_cancel_purchase_poll.json` returns the same payload shape as the new purchase poll endpoint.
+
+Poll sample customers for new taggings
+--------------------------------------
+
+`GET /account/zapier_new_tagging_poll.json` will return sample customer payloads for the "new tagging" Zapier trigger.
+
+Optionally pass `tag_id` to bias the sample data toward a specific tag.
+
+The response shape is the same as [`GET /account/zapier_new_subscription_poll.json`](#poll-sample-customers-for-new-subscriptions).
+
+Poll sample customers for deleted taggings
+------------------------------------------
+
+`GET /account/zapier_delete_tagging_poll.json` returns the same payload shape as the new subscription poll endpoint.
+
+
+Zapier subscriptions
+====================
+
+These endpoints are used to create and remove webhook subscriptions for the public Simplero Zapier app.
+
+Create or update a Zapier subscription
+--------------------------------------
+
+`POST /zapier_subscriptions.json` will create a new Zapier subscription or update the existing one for the same `target_url`.
+
+**POST request body:**
+
+```json
+{
+  "event": "new_subscription",
+  "target_id": 123,
+  "target_url": "https://hooks.zapier.com/hooks/catch/123456/abcdef/"
+}
+```
+
+Supported `event` values are:
+
+- `new_subscription`
+- `delete_subscription`
+- `new_purchase`
+- `cancel_purchase`
+- `new_tagging`
+- `delete_tagging`
+
+For subscription events, `target_id` should be the list ID.
+
+For tagging events, `target_id` should be the tag ID.
+
+For purchase events, subscriptions are account-wide and `target_id` is not used.
+
+**Response:**
+
+```json
+{
+  "id": 98765,
+  "event": "new_subscription",
+  "target_id": 123,
+  "target_type": "List"
+}
+```
+
+Destroy a Zapier subscription
+-----------------------------
+
+`DELETE /zapier_subscriptions/98765.json` will remove a Zapier subscription.
+
+The `id` can be the current Simplero subscription ID. Legacy numeric IDs from older Zapier subscriptions are still accepted as well.
+
+**Response:**
+
+```json
+{
+  "id": 98765,
+  "event": "new_subscription",
+  "target_id": 123,
+  "target_type": "List",
+  "target_url": "https://hooks.zapier.com/hooks/catch/123456/abcdef/"
+}
+```
+
 
 Asynchronous requests
 --------------
@@ -1382,14 +1979,14 @@ original request.
 ```json
 {
      "token": "ABC123",
-     "action": "bulk_subscribe",
+     "action": "lists/bulk_subscribe",
      "status": "success",
      "enqueued_at": "2023-09-05T09:49:12.000-04:00",
      "processing_started_at": "2023-09-05T09:49:12.000-04:00",
      "completed_at": "2023-09-05T09:49:12.000-04:00",
-     "result": {
+     "result": [
           /* ... */
-     },
+     ]
 ```
 
 `status` can be:
