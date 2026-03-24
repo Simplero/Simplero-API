@@ -17,6 +17,7 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Add tag to contact](#add-tag-to-contact)
       * [Remove tag from contact](#remove-tag-from-contact)
       * [Course completions](#course-completions)
+      * [Email activity for a contact](#email-activity-for-a-contact)
       * [Issue points](#issue-points)
    * [Lists](#lists)
       * [Get lists](#get-lists)
@@ -31,6 +32,8 @@ We also have one webhook endpoint available. See the bottom of this file.
       * [Create free purchase](#create-free-purchase)
       * [Find purchase by email](#find-purchase-by-email)
       * [Find purchase by ID or token](#find-purchase-by-id-or-token)
+   * [Purchases](#purchases)
+      * [List purchases](#list-purchases)
       * [Search purchases](#search-purchases)
    * [Tags](#tags)
       * [Get tags](#get-tags)
@@ -497,6 +500,54 @@ Use [`GET /point_types.json`](#point-types) to discover valid point types for th
 ```
 
 This will be sent using HTTP status code 422 Unprocessable Entity.
+
+
+Email activity for a contact
+--------------
+
+`GET /customers/123/email_activity.json` returns paginated email engagement history for a contact, across all broadcasts and autoresponders.
+
+Replace `123` with the contact ID.
+
+**Parameters:**
+
+- `page` — 0-indexed page number (default 0)
+- `per_page` — results per page, 1–100 (default 20)
+- `from` / `to` — filter by sent_at (ISO 8601)
+- `engagement` — filter by engagement type: `sent`, `opened`, `clicked`, `bounced`, `spamreported`, `unsubscribed`
+- `mailing_type` — filter by mailing type: `Broadcast` or `AutoResponse`
+
+**Response:**
+
+```json
+{
+  "data": [
+    {
+      "id": 1234567,
+      "mailing_id": 456,
+      "mailing_subject": "Weekly newsletter",
+      "mailing_type": "Broadcast",
+      "email": "calvin@simplero.com",
+      "sent_at": "2026-01-15T10:01:00.000-05:00",
+      "delivered_at": "2026-01-15T10:01:05.000-05:00",
+      "opened_at": "2026-01-15T10:05:23.000-05:00",
+      "clicked_at": "2026-01-15T10:06:10.000-05:00",
+      "bounced_at": null,
+      "spamreported_at": null,
+      "unsubscribed_at": null,
+      "opens_count": 2,
+      "clicks_count": 1,
+      "status": "clicked"
+    }
+  ],
+  "page": 0,
+  "per_page": 20,
+  "total": 38,
+  "total_pages": 2
+}
+```
+
+`status` reflects the most significant engagement event: `spamreported`, `unsubscribed`, `clicked`, `opened`, `delivered`, `bounced`, `dropped`, or `sent`.
 
 
 Lists
@@ -1139,6 +1190,55 @@ Results are ordered by `created_at` descending.
 **Response:**
 
 Returns an array of purchase objects in the same format as the purchase object returned by [Find purchase by ID or token](#find-purchase-by-id-or-token).
+
+
+Purchases
+=========
+
+List purchases
+--------------
+
+`GET /purchases.json` will return a paginated list of purchases across all products.
+
+**Parameters:**
+
+- `page` — 0-indexed page number (default 0)
+- `per_page` — results per page, 1–100 (default 20)
+- `product_id` — filter by product
+- `customer_id` — filter by contact ID
+- `email` — filter by contact email
+- `state` — filter by purchase state (e.g. `paid`, `canceled`, `refunded`, `free`)
+- `from` / `to` — filter by `purchased_at` date range (ISO 8601)
+- `created_from` / `created_to` — filter by `created_at` date range (ISO 8601)
+- `mailing_id` — filter by the campaign/mailing that attributed this purchase
+- `landing_page_id` — filter by landing page
+
+**Response:**
+
+```json
+{
+  "data": [
+    {
+      "id": 10000001,
+      "state": "paid",
+      "email": "user@example.com",
+      "purchased_at": "2026-01-28T12:41:47.000-05:00",
+      "received_price_cents": 2700,
+      "received_total_cents": 2700,
+      "currency_code": "USD",
+      "product": { "name": "Sample Product" },
+      "transactions": [ "..." ],
+      "purchase": { "..." }
+    }
+  ],
+  "page": 0,
+  "per_page": 20,
+  "total": 142,
+  "total_pages": 8
+}
+```
+
+Each object in `data` has the same structure as the response from [Find purchase by ID or token](#find-purchase-by-id-or-token).
 
 
 Tags
