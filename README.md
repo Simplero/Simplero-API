@@ -1,3 +1,10 @@
+> ⚠️ **Deprecated:** This API (`/api/v1`) is deprecated. Please use `/api/v2`, which supports many more resources.
+>
+> - **Docs:** https://simplero.com/api/v2/docs
+> - **OpenAPI spec:** https://simplero.com/api/v2/docs/openapi.json
+>
+> The endpoints documented below remain available so existing integrations keep working, but new integrations should use `/api/v2`.
+
 The API is REST, using JSON for serialization, with no root element.
 
 We also have one webhook endpoint available. See the bottom of this file.
